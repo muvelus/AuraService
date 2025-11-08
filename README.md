@@ -1,1 +1,939 @@
-# AuraService
+# AuraService - Online Reputation Management System
+
+A complete Java Spring Boot backend application for managing online reputation for celebrities and movies.
+
+## Technology Stack
+
+- **Java Version:** 17
+- **Framework:** Spring Boot 3.2.0
+- **Database:** H2 (in-memory)
+- **Authentication:** Spring Security 6 with JWT
+- **Build Tool:** Maven
+
+## Getting Started
+
+### Prerequisites
+
+- Java 17 or higher
+- Maven 3.6 or higher
+
+### Running the Application
+
+```bash
+mvn spring-boot:run
+```
+
+The application will start on `http://localhost:8080`
+
+### Default Credentials
+
+- **Username:** `user`
+- **Password:** `password`
+
+### H2 Console
+
+Access the H2 database console at: `http://localhost:8080/h2-console`
+
+- **JDBC URL:** `jdbc:h2:mem:auradb`
+- **Username:** `sa`
+- **Password:** (leave empty)
+
+## API Documentation
+
+All endpoints except `/api/auth/*` require JWT authentication. Include the JWT token in the `Authorization` header as `Bearer {token}`.
+
+---
+
+## Authentication APIs
+
+### 1. Register User
+
+**Endpoint:** `POST /api/auth/register`
+
+**Description:** Register a new user account
+
+**Request Body:**
+```json
+{
+  "username": "newuser",
+  "password": "password123"
+}
+```
+
+**Response:**
+```json
+"User registered successfully"
+```
+
+**Status Code:** `200 OK`
+
+---
+
+### 2. Login
+
+**Endpoint:** `POST /api/auth/login`
+
+**Description:** Login and receive JWT token
+
+**Request Body:**
+```json
+{
+  "username": "user",
+  "password": "password"
+}
+```
+
+**Response:**
+```json
+{
+  "jwtToken": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VyIiwiaWF0IjoxNjk5..."
+}
+```
+
+**Status Code:** `200 OK`
+
+---
+
+## Entity Management APIs
+
+### 3. Create Managed Entity
+
+**Endpoint:** `POST /api/entities`
+
+**Description:** Create a new managed entity (celebrity or movie)
+
+**Headers:**
+```
+Authorization: Bearer {jwt_token}
+```
+
+**Request Body:**
+```json
+{
+  "name": "The Matrix Resurrections",
+  "type": "MOVIE",
+  "director": "Lana Wachowski",
+  "actors": ["Keanu Reeves", "Carrie-Anne Moss", "Yahya Abdul-Mateen II"]
+}
+```
+
+**Response:**
+```json
+{
+  "id": 5,
+  "name": "The Matrix Resurrections",
+  "type": "MOVIE",
+  "director": "Lana Wachowski",
+  "actors": ["Keanu Reeves", "Carrie-Anne Moss", "Yahya Abdul-Mateen II"],
+  "competitors": []
+}
+```
+
+**Status Code:** `200 OK`
+
+---
+
+### 4. Get All Entities
+
+**Endpoint:** `GET /api/entities`
+
+**Description:** Retrieve a list of all managed entities
+
+**Headers:**
+```
+Authorization: Bearer {jwt_token}
+```
+
+**Response:**
+```json
+[
+  {
+    "id": 1,
+    "name": "The Quantum Paradox",
+    "type": "MOVIE"
+  },
+  {
+    "id": 2,
+    "name": "Emma Stone",
+    "type": "CELEBRITY"
+  },
+  {
+    "id": 3,
+    "name": "Inception 2",
+    "type": "MOVIE"
+  }
+]
+```
+
+**Status Code:** `200 OK`
+
+---
+
+### 5. Get Entity by ID
+
+**Endpoint:** `GET /api/entities/{id}`
+
+**Description:** Retrieve detailed information about a specific entity
+
+**Headers:**
+```
+Authorization: Bearer {jwt_token}
+```
+
+**Path Parameters:**
+- `id` - Entity ID (e.g., 1)
+
+**Response:**
+```json
+{
+  "id": 1,
+  "name": "The Quantum Paradox",
+  "type": "MOVIE",
+  "director": "Christopher Nolan",
+  "actors": ["Leonardo DiCaprio", "Emma Stone", "Tom Hardy"],
+  "competitors": [
+    {
+      "id": 3,
+      "name": "Inception 2",
+      "type": "MOVIE"
+    },
+    {
+      "id": 4,
+      "name": "Interstellar Reloaded",
+      "type": "MOVIE"
+    }
+  ]
+}
+```
+
+**Status Code:** `200 OK`
+
+---
+
+### 6. Update Competitors
+
+**Endpoint:** `PUT /api/entities/{id}/competitors`
+
+**Description:** Update the list of competitors for an entity
+
+**Headers:**
+```
+Authorization: Bearer {jwt_token}
+```
+
+**Path Parameters:**
+- `id` - Entity ID (e.g., 1)
+
+**Request Body:**
+```json
+{
+  "competitorIds": [3, 4, 5]
+}
+```
+
+**Response:**
+```json
+{
+  "id": 1,
+  "name": "The Quantum Paradox",
+  "type": "MOVIE",
+  "director": "Christopher Nolan",
+  "actors": ["Leonardo DiCaprio", "Emma Stone", "Tom Hardy"],
+  "competitors": [
+    {
+      "id": 3,
+      "name": "Inception 2",
+      "type": "MOVIE"
+    },
+    {
+      "id": 4,
+      "name": "Interstellar Reloaded",
+      "type": "MOVIE"
+    },
+    {
+      "id": 5,
+      "name": "The Matrix Resurrections",
+      "type": "MOVIE"
+    }
+  ]
+}
+```
+
+**Status Code:** `200 OK`
+
+---
+
+## Dashboard APIs
+
+### 7. Get Entity Statistics
+
+**Endpoint:** `GET /api/dashboard/{entityId}/stats`
+
+**Description:** Get core statistics for an entity
+
+**Headers:**
+```
+Authorization: Bearer {jwt_token}
+```
+
+**Path Parameters:**
+- `entityId` - Entity ID (e.g., 1)
+
+**Response:**
+```json
+{
+  "totalMentions": 50,
+  "positiveSentiment": 0.64,
+  "negativeSentiment": 0.18
+}
+```
+
+**Status Code:** `200 OK`
+
+---
+
+### 8. Get Competitor Snapshot
+
+**Endpoint:** `GET /api/dashboard/{entityId}/competitor-snapshot`
+
+**Description:** Get statistics for the entity and its competitors
+
+**Headers:**
+```
+Authorization: Bearer {jwt_token}
+```
+
+**Path Parameters:**
+- `entityId` - Entity ID (e.g., 1)
+
+**Response:**
+```json
+[
+  {
+    "entityName": "The Quantum Paradox",
+    "totalMentions": 50,
+    "positiveSentiment": 0.64
+  },
+  {
+    "entityName": "Inception 2",
+    "totalMentions": 50,
+    "positiveSentiment": 0.58
+  },
+  {
+    "entityName": "Interstellar Reloaded",
+    "totalMentions": 50,
+    "positiveSentiment": 0.62
+  }
+]
+```
+
+**Status Code:** `200 OK`
+
+---
+
+### 9. Get Sentiment Over Time
+
+**Endpoint:** `GET /api/dashboard/{entityId}/sentiment-over-time`
+
+**Description:** Get time-series data for sentiment analysis
+
+**Headers:**
+```
+Authorization: Bearer {jwt_token}
+```
+
+**Path Parameters:**
+- `entityId` - Entity ID (e.g., 1)
+
+**Query Parameters:**
+- `period` - Time period (DAY, WEEK, or MONTH)
+- `entityIds` - Comma-separated list of entity IDs to compare (e.g., 1,3,4)
+
+**Example Request:**
+```
+GET /api/dashboard/1/sentiment-over-time?period=WEEK&entityIds=1,3
+```
+
+**Response:**
+```json
+{
+  "The Quantum Paradox": [
+    {
+      "date": "2025-W44",
+      "positive": 8,
+      "negative": 2
+    },
+    {
+      "date": "2025-W45",
+      "positive": 12,
+      "negative": 3
+    },
+    {
+      "date": "2025-W46",
+      "positive": 15,
+      "negative": 4
+    }
+  ],
+  "Inception 2": [
+    {
+      "date": "2025-W44",
+      "positive": 7,
+      "negative": 3
+    },
+    {
+      "date": "2025-W45",
+      "positive": 10,
+      "negative": 5
+    },
+    {
+      "date": "2025-W46",
+      "positive": 12,
+      "negative": 2
+    }
+  ]
+}
+```
+
+**Status Code:** `200 OK`
+
+---
+
+### 10. Get Platform Mentions
+
+**Endpoint:** `GET /api/dashboard/{entityId}/platform-mentions`
+
+**Description:** Get mention counts broken down by platform
+
+**Headers:**
+```
+Authorization: Bearer {jwt_token}
+```
+
+**Path Parameters:**
+- `entityId` - Entity ID (e.g., 1)
+
+**Response:**
+```json
+{
+  "TWITTER": 15,
+  "REDDIT": 12,
+  "YOUTUBE": 13,
+  "INSTAGRAM": 10
+}
+```
+
+**Status Code:** `200 OK`
+
+---
+
+### 11. Get Filtered Mentions
+
+**Endpoint:** `GET /api/dashboard/{entityId}/mentions`
+
+**Description:** Get a paginated list of mentions with optional filters
+
+**Headers:**
+```
+Authorization: Bearer {jwt_token}
+```
+
+**Path Parameters:**
+- `entityId` - Entity ID (e.g., 1)
+
+**Query Parameters:**
+- `platform` - Filter by platform (TWITTER, REDDIT, YOUTUBE, INSTAGRAM) - Optional
+- `country` - Filter by country - Optional
+- `city` - Filter by city - Optional
+- `age` - Filter by author age - Optional
+- `startDate` - Filter by start date (ISO 8601 format) - Optional
+- `endDate` - Filter by end date (ISO 8601 format) - Optional
+- `page` - Page number (default: 0)
+- `size` - Page size (default: 10)
+
+**Example Request:**
+```
+GET /api/dashboard/1/mentions?platform=TWITTER&country=USA&page=0&size=5
+```
+
+**Response:**
+```json
+{
+  "content": [
+    {
+      "id": 1,
+      "managedEntityId": 1,
+      "platform": "TWITTER",
+      "postId": "The_Quantum_Paradox_post_0",
+      "content": "This movie is absolutely amazing! Best film of the year!",
+      "author": "movie_fan_123",
+      "authorAge": 28,
+      "locationCountry": "USA",
+      "locationCity": "New York",
+      "postDate": "2025-11-05T10:30:00Z",
+      "sentiment": "POSITIVE"
+    },
+    {
+      "id": 2,
+      "managedEntityId": 1,
+      "platform": "TWITTER",
+      "postId": "The_Quantum_Paradox_post_5",
+      "content": "Incredible performance! Oscar-worthy for sure.",
+      "author": "critic_sarah",
+      "authorAge": 35,
+      "locationCountry": "USA",
+      "locationCity": "Los Angeles",
+      "postDate": "2025-11-03T14:20:00Z",
+      "sentiment": "POSITIVE"
+    }
+  ],
+  "pageable": {
+    "pageNumber": 0,
+    "pageSize": 5
+  },
+  "totalElements": 15,
+  "totalPages": 3,
+  "last": false
+}
+```
+
+**Status Code:** `200 OK`
+
+---
+
+## Interaction APIs
+
+### 12. Generate Reply
+
+**Endpoint:** `POST /api/interact/generate-reply`
+
+**Description:** Generate an AI-powered reply to a mention (Mock LLM)
+
+**Headers:**
+```
+Authorization: Bearer {jwt_token}
+```
+
+**Request Body:**
+```json
+{
+  "mentionContent": "This movie was terrible! Waste of money.",
+  "sentiment": "NEGATIVE"
+}
+```
+
+**Response:**
+```json
+{
+  "generatedReply": "This is a mock LLM-generated reply. In production, this would be generated by an actual LLM based on the prompt: Generate a professional reply to the following negative mention: This movie was terrible! Waste of money."
+}
+```
+
+**Status Code:** `200 OK`
+
+---
+
+### 13. Post Response
+
+**Endpoint:** `POST /api/interact/respond`
+
+**Description:** Post a reply to a social media platform (Mock implementation)
+
+**Headers:**
+```
+Authorization: Bearer {jwt_token}
+```
+
+**Request Body:**
+```json
+{
+  "platform": "TWITTER",
+  "postIdToReplyTo": "tweet_12345",
+  "replyText": "Thank you for your feedback! We appreciate your input and are always working to improve."
+}
+```
+
+**Response:**
+```json
+"Reply posted successfully (mock)"
+```
+
+**Status Code:** `200 OK`
+
+**Note:** In production, this would actually post to the specified platform. The mock implementation logs to console.
+
+---
+
+## Crisis Management APIs
+
+### 14. Generate Crisis Plan
+
+**Endpoint:** `POST /api/crisis/generate-plan`
+
+**Description:** Generate a detailed crisis management plan (Mock LLM)
+
+**Headers:**
+```
+Authorization: Bearer {jwt_token}
+```
+
+**Request Body:**
+```json
+{
+  "entityId": 1,
+  "crisisDescription": "Negative reviews are flooding social media after controversial scene in the movie"
+}
+```
+
+**Response:**
+```json
+{
+  "generatedPlan": "Mock Crisis Management Plan:\n\n1. Immediate Response: Issue a public statement acknowledging the situation.\n2. Assessment: Gather all facts and assess the severity of the crisis.\n3. Communication Strategy: Develop key messages for different stakeholders.\n4. Action Plan: Implement corrective measures and monitor progress.\n5. Follow-up: Continue monitoring sentiment and adjust strategy as needed.\n\nThis is a mock plan. In production, this would be generated by an actual LLM based on: Generate a detailed crisis management plan for The Quantum Paradox (MOVIE) regarding the following crisis: Negative reviews are flooding social media after controversial scene in the movie"
+}
+```
+
+**Status Code:** `200 OK`
+
+---
+
+## Analytics APIs
+
+### 15. Get Box Office Prediction
+
+**Endpoint:** `GET /api/analytics/box-office-prediction`
+
+**Description:** Get predicted box office revenue for a movie (Mock analytics)
+
+**Headers:**
+```
+Authorization: Bearer {jwt_token}
+```
+
+**Query Parameters:**
+- `movieId` - Movie entity ID (e.g., 1)
+
+**Example Request:**
+```
+GET /api/analytics/box-office-prediction?movieId=1
+```
+
+**Response:**
+```json
+{
+  "movieId": 1,
+  "predictedBoxOffice": 127543892.45
+}
+```
+
+**Status Code:** `200 OK`
+
+**Note:** Mock implementation returns random values between $50M-$150M
+
+---
+
+### 16. Get Trending Genre
+
+**Endpoint:** `GET /api/analytics/trending-genre`
+
+**Description:** Get the trending genre for a specific date (Mock analytics)
+
+**Headers:**
+```
+Authorization: Bearer {jwt_token}
+```
+
+**Query Parameters:**
+- `date` - Date in ISO format (e.g., 2025-11-08)
+
+**Example Request:**
+```
+GET /api/analytics/trending-genre?date=2025-11-08
+```
+
+**Response:**
+```json
+{
+  "date": "2025-11-08",
+  "trendingGenre": "Sci-Fi"
+}
+```
+
+**Status Code:** `200 OK`
+
+**Note:** Mock implementation returns random genre from: Action, Comedy, Drama, Thriller, Sci-Fi, Romance
+
+---
+
+### 17. Get Hit Genre Prediction
+
+**Endpoint:** `GET /api/analytics/hit-genre-prediction`
+
+**Description:** Get predicted hit genre for upcoming releases (Mock analytics)
+
+**Headers:**
+```
+Authorization: Bearer {jwt_token}
+```
+
+**Response:**
+```json
+{
+  "predictedHitGenre": "Action"
+}
+```
+
+**Status Code:** `200 OK`
+
+**Note:** Mock implementation returns random genre from: Action, Comedy, Drama, Thriller, Sci-Fi, Romance
+
+---
+
+### 18. Get Best Genre
+
+**Endpoint:** `GET /api/analytics/best-genre`
+
+**Description:** Get the best performing genre for a specific date (Mock analytics)
+
+**Headers:**
+```
+Authorization: Bearer {jwt_token}
+```
+
+**Query Parameters:**
+- `date` - Date in ISO format (e.g., 2025-11-08)
+
+**Example Request:**
+```
+GET /api/analytics/best-genre?date=2025-11-08
+```
+
+**Response:**
+```json
+{
+  "date": "2025-11-08",
+  "bestGenre": "Comedy"
+}
+```
+
+**Status Code:** `200 OK`
+
+**Note:** Mock implementation returns random genre from: Action, Comedy, Drama, Thriller, Sci-Fi, Romance
+
+---
+
+### 19. Get Top Box Office
+
+**Endpoint:** `GET /api/analytics/top-box-office`
+
+**Description:** Get the top box office movie for a specific date (Mock analytics)
+
+**Headers:**
+```
+Authorization: Bearer {jwt_token}
+```
+
+**Query Parameters:**
+- `date` - Date in ISO format (e.g., 2025-11-08)
+
+**Example Request:**
+```
+GET /api/analytics/top-box-office?date=2025-11-08
+```
+
+**Response:**
+```json
+{
+  "date": "2025-11-08",
+  "topBoxOfficeMovie": "Avatar 3"
+}
+```
+
+**Status Code:** `200 OK`
+
+**Note:** Mock implementation returns random movie from a predefined list
+
+---
+
+## Error Responses
+
+All endpoints may return the following error responses:
+
+### 400 Bad Request
+
+**Example:**
+```json
+{
+  "timestamp": "2025-11-08T11:30:00.000+00:00",
+  "status": 400,
+  "error": "Bad Request",
+  "message": "Entity not found with id: 999"
+}
+```
+
+### 401 Unauthorized
+
+**Example:**
+```json
+{
+  "timestamp": "2025-11-08T11:30:00.000+00:00",
+  "status": 401,
+  "error": "Unauthorized",
+  "message": "Invalid username or password"
+}
+```
+
+### 422 Validation Error
+
+**Example:**
+```json
+{
+  "timestamp": "2025-11-08T11:30:00.000+00:00",
+  "status": 400,
+  "error": "Validation Failed",
+  "errors": {
+    "username": "Username is required",
+    "password": "Password is required"
+  }
+}
+```
+
+### 500 Internal Server Error
+
+**Example:**
+```json
+{
+  "timestamp": "2025-11-08T11:30:00.000+00:00",
+  "status": 500,
+  "error": "Internal Server Error",
+  "message": "An unexpected error occurred"
+}
+```
+
+---
+
+## Sample Data
+
+The application comes pre-loaded with sample data:
+
+### Entities
+- **Movie:** "The Quantum Paradox" (ID: 1)
+  - Director: Christopher Nolan
+  - Actors: Leonardo DiCaprio, Emma Stone, Tom Hardy
+  - Competitors: Inception 2, Interstellar Reloaded
+
+- **Celebrity:** "Emma Stone" (ID: 2)
+
+- **Movie:** "Inception 2" (ID: 3)
+  - Director: Denis Villeneuve
+  - Actors: Ryan Gosling, Margot Robbie
+
+- **Movie:** "Interstellar Reloaded" (ID: 4)
+  - Director: James Cameron
+  - Actors: Zendaya, Timothée Chalamet
+
+### Mentions
+- 50 mentions per entity (200 total)
+- Distributed across all platforms (Twitter, Reddit, YouTube, Instagram)
+- Various sentiments (Positive, Negative, Neutral)
+- Dates spanning the last 90 days
+- Various locations and author demographics
+
+---
+
+## Testing the API
+
+### Using cURL
+
+1. **Login to get JWT token:**
+```bash
+curl -X POST http://localhost:8080/api/auth/login \
+  -H "Content-Type: application/json" \
+  -d '{"username":"user","password":"password"}'
+```
+
+2. **Use the token for authenticated requests:**
+```bash
+curl -X GET http://localhost:8080/api/entities \
+  -H "Authorization: Bearer YOUR_JWT_TOKEN_HERE"
+```
+
+3. **Get entity statistics:**
+```bash
+curl -X GET http://localhost:8080/api/dashboard/1/stats \
+  -H "Authorization: Bearer YOUR_JWT_TOKEN_HERE"
+```
+
+### Using Postman
+
+1. Import the endpoints into Postman
+2. Create an environment variable for `jwt_token`
+3. Login using `/api/auth/login` and save the token
+4. Use `{{jwt_token}}` in the Authorization header for other requests
+
+---
+
+## Architecture
+
+### Package Structure
+```
+com.aura.service
+├── config          # Security and application configuration
+├── controller      # REST API controllers
+├── dto             # Data Transfer Objects
+├── entity          # JPA entities
+├── enums           # Enumerations
+├── exception       # Global exception handling
+├── repository      # JPA repositories
+├── security        # JWT and authentication
+└── service         # Business logic
+```
+
+### Key Components
+
+- **SecurityConfig:** Spring Security configuration with JWT
+- **JwtService:** JWT token generation and validation
+- **DataInitializer:** Pre-loads sample data on startup
+- **GlobalExceptionHandler:** Centralized error handling
+- **Mock Services:** LLM, Social Media, and Analytics mock implementations
+
+---
+
+## Production Deployment
+
+### Environment Variables
+
+Set the following environment variables for production:
+
+```bash
+export JWT_SECRET=your-secure-secret-key-here
+export SPRING_PROFILES_ACTIVE=prod
+```
+
+### Database Configuration
+
+For production, replace H2 with a persistent database (PostgreSQL, MySQL, etc.) by updating `application.properties`:
+
+```properties
+spring.datasource.url=jdbc:postgresql://localhost:5432/auradb
+spring.datasource.username=your_username
+spring.datasource.password=your_password
+spring.jpa.hibernate.ddl-auto=update
+```
+
+### Building for Production
+
+```bash
+mvn clean package
+java -jar target/aura-service-1.0.0.jar
+```
+
+---
+
+## License
+
+This project is licensed under the MIT License.
+
+---
+
+## Support
+
+For issues or questions, please contact the development team
