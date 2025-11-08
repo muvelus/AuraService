@@ -34,9 +34,25 @@ The application will start on `http://localhost:8080`
 
 Access the H2 database console at: `http://localhost:8080/h2-console`
 
-- **JDBC URL:** `jdbc:h2:mem:auradb`
-- **Username:** `sa`
-- **Password:** (leave empty)
+**Important:** The H2 console defaults to a file-based database. You must manually change the connection settings:
+
+**Connection Settings:**
+1. Make sure the application is running first
+2. On the H2 console login page, enter:
+   - **JDBC URL:** `jdbc:h2:mem:auradb`
+   - **User Name:** `sa`
+   - **Password:** (leave empty)
+3. Click "Connect"
+
+**If you encounter connection issues, use this enhanced URL:**
+```
+jdbc:h2:mem:auradb;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
+```
+
+**Notes:**
+- The in-memory database only exists while the application is running
+- Restarting the application resets all data to the initial sample data
+- Clear any "Saved Settings" in the H2 console dropdown if it auto-fills the wrong URL
 
 ## API Documentation
 
