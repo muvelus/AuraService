@@ -25,18 +25,34 @@ mvn spring-boot:run
 
 The application will start on `http://localhost:8080`
 
+### Building and Running the Executable JAR
+
+To build an executable JAR file, run the following command:
+
+```bash
+mvn clean package
+```
+
+This will create a file named `aura-service-1.0.0.jar` in the `target` directory.
+
+To run the application from the JAR file, use the following command:
+
+```bash
+java -jar target/aura-service-1.0.0.jar
+```
+
+The application will start on `http://localhost:8080`.
+
 ### Default Credentials
 
 - **Username:** `user`
 - **Password:** `password`
 
-### H2 Console
+### PostGres
 
-Access the H2 database console at: `http://localhost:8080/h2-console`
-
-- **JDBC URL:** `jdbc:h2:mem:auradb`
-- **Username:** `sa`
-- **Password:** (leave empty)
+- db.url=jdbc:postgresql://localhost:5432/aura
+- db.user=mukundv
+- db.password=
 
 ## API Documentation
 
