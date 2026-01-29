@@ -54,6 +54,58 @@ The application will start on `http://localhost:8080`.
 - db.user=mukundv
 - db.password=
 
+## Database Initialization (PostgreSQL)
+
+```sql
+CREATE TABLE users (
+    id BIGSERIAL PRIMARY KEY,
+    username VARCHAR(255) UNIQUE NOT NULL,
+    password VARCHAR(255) NOT NULL,
+    role VARCHAR(255) NOT NULL
+);
+
+CREATE TABLE managed_entities (
+    id BIGSERIAL PRIMARY KEY,
+    name VARCHAR(255) NOT NULL,
+    type VARCHAR(255) NOT NULL,
+    director VARCHAR(255)
+);
+
+CREATE TABLE entity_actors (
+    entity_id BIGINT NOT NULL,
+    actor VARCHAR(255),
+    CONSTRAINT fk_entity_actors_managed_entities FOREIGN KEY (entity_id) REFERENCES managed_entities(id)
+);
+
+CREATE TABLE entity_keywords (
+    entity_id BIGINT NOT NULL,
+    keyword VARCHAR(255),
+    CONSTRAINT fk_entity_keywords_managed_entities FOREIGN KEY (entity_id) REFERENCES managed_entities(id)
+);
+
+CREATE TABLE entity_competitors (
+    entity_id BIGINT NOT NULL,
+    competitor_id BIGINT NOT NULL,
+    CONSTRAINT fk_entity_competitors_entity FOREIGN KEY (entity_id) REFERENCES managed_entities(id),
+    CONSTRAINT fk_entity_competitors_competitor FOREIGN KEY (competitor_id) REFERENCES managed_entities(id)
+);
+
+CREATE TABLE mentions (
+    id BIGSERIAL PRIMARY KEY,
+    managed_entity_id BIGINT NOT NULL,
+    platform VARCHAR(255) NOT NULL,
+    post_id VARCHAR(255) UNIQUE NOT NULL,
+    content TEXT,
+    author VARCHAR(255),
+    author_age INTEGER,
+    location_country VARCHAR(255),
+    location_city VARCHAR(255),
+    post_date TIMESTAMP NOT NULL,
+    sentiment VARCHAR(255) NOT NULL,
+    CONSTRAINT fk_mentions_managed_entities FOREIGN KEY (managed_entity_id) REFERENCES managed_entities(id)
+);
+```
+
 ## API Documentation
 
 All endpoints except `/api/auth/*` require JWT authentication. Include the JWT token in the `Authorization` header as `Bearer {token}`.
