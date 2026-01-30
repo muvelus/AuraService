@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
@@ -91,10 +92,11 @@ public class DashboardService {
     }
     
     private Instant calculateStartDate(TimePeriod period, Instant endDate) {
+        ZonedDateTime zonedDateTime = endDate.atZone(ZoneId.systemDefault());
         return switch (period) {
             case DAY -> endDate.minus(7, ChronoUnit.DAYS);
-            case WEEK -> endDate.minus(8, ChronoUnit.WEEKS);
-            case MONTH -> endDate.minus(12, ChronoUnit.MONTHS);
+            case WEEK -> zonedDateTime.minusWeeks(8).toInstant();
+            case MONTH -> zonedDateTime.minusMonths(12).toInstant();
         };
     }
     
@@ -143,10 +145,11 @@ public class DashboardService {
     }
     
     private Instant incrementByPeriod(Instant instant, TimePeriod period) {
+        ZonedDateTime zonedDateTime = instant.atZone(ZoneId.systemDefault());
         return switch (period) {
             case DAY -> instant.plus(1, ChronoUnit.DAYS);
-            case WEEK -> instant.plus(7, ChronoUnit.DAYS);
-            case MONTH -> instant.plus(30, ChronoUnit.DAYS);
+            case WEEK -> zonedDateTime.plusWeeks(1).toInstant();
+            case MONTH -> zonedDateTime.plusMonths(1).toInstant();
         };
     }
     
