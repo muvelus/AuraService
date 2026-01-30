@@ -113,7 +113,7 @@ public class DashboardService {
         
         while (current.isBefore(endDate) || current.equals(endDate)) {
             String dateKey = formatDate(current, formatter);
-            dataMap.put(dateKey, new TimeSeriesData(dateKey, 0, 0));
+            dataMap.put(dateKey, new TimeSeriesData(dateKey, 0, 0, 0));
             current = incrementByPeriod(current, period);
         }
         
@@ -121,10 +121,10 @@ public class DashboardService {
             String dateKey = formatDate(mention.getPostDate(), formatter);
             TimeSeriesData data = dataMap.get(dateKey);
             if (data != null) {
-                if (mention.getSentiment() == Sentiment.POSITIVE) {
-                    data.setPositive(data.getPositive() + 1);
-                } else if (mention.getSentiment() == Sentiment.NEGATIVE) {
-                    data.setNegative(data.getNegative() + 1);
+                switch (mention.getSentiment()) {
+                    case POSITIVE -> data.setPositive(data.getPositive() + 1);
+                    case NEGATIVE -> data.setNegative(data.getNegative() + 1);
+                    case NEUTRAL -> data.setNeutral(data.getNeutral() + 1);
                 }
             }
         }

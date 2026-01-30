@@ -11,4 +11,5 @@ public class TimeSeriesData {
     private String date;
     private long positive;
     private long negative;
+    private long neutral;
 }

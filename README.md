@@ -432,17 +432,20 @@ GET /api/dashboard/1/sentiment-over-time?period=WEEK&entityIds=1,3
         {
           "date": "2025-W44",
           "positive": 8,
-          "negative": 2
+          "negative": 2,
+          "neutral": 1
         },
         {
           "date": "2025-W45",
           "positive": 12,
-          "negative": 3
+          "negative": 3,
+          "neutral": 2
         },
         {
           "date": "2025-W46",
           "positive": 15,
-          "negative": 4
+          "negative": 4,
+          "neutral": 3
         }
       ]
     },
@@ -452,17 +455,20 @@ GET /api/dashboard/1/sentiment-over-time?period=WEEK&entityIds=1,3
         {
           "date": "2025-W44",
           "positive": 7,
-          "negative": 3
+          "negative": 3,
+          "neutral": 0
         },
         {
           "date": "2025-W45",
           "positive": 10,
-          "negative": 5
+          "negative": 5,
+          "neutral": 1
         },
         {
           "date": "2025-W46",
           "positive": 12,
-          "negative": 2
+          "negative": 2,
+          "neutral": 2
         }
       ]
     }
