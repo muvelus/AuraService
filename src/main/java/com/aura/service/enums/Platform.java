@@ -1,7 +1,7 @@
 package com.aura.service.enums;
 
 public enum Platform {
-    TWITTER,
+    X,
     REDDIT,
     YOUTUBE,
     INSTAGRAM

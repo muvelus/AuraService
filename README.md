@@ -425,38 +425,46 @@ GET /api/dashboard/1/sentiment-over-time?period=WEEK&entityIds=1,3
 **Response:**
 ```json
 {
-  "The Quantum Paradox": [
+  "entities": [
     {
-      "date": "2025-W44",
-      "positive": 8,
-      "negative": 2
+      "name": "The Quantum Paradox",
+      "sentiments": [
+        {
+          "date": "2025-W44",
+          "positive": 8,
+          "negative": 2
+        },
+        {
+          "date": "2025-W45",
+          "positive": 12,
+          "negative": 3
+        },
+        {
+          "date": "2025-W46",
+          "positive": 15,
+          "negative": 4
+        }
+      ]
     },
     {
-      "date": "2025-W45",
-      "positive": 12,
-      "negative": 3
-    },
-    {
-      "date": "2025-W46",
-      "positive": 15,
-      "negative": 4
-    }
-  ],
-  "Inception 2": [
-    {
-      "date": "2025-W44",
-      "positive": 7,
-      "negative": 3
-    },
-    {
-      "date": "2025-W45",
-      "positive": 10,
-      "negative": 5
-    },
-    {
-      "date": "2025-W46",
-      "positive": 12,
-      "negative": 2
+      "name": "Inception 2",
+      "sentiments": [
+        {
+          "date": "2025-W44",
+          "positive": 7,
+          "negative": 3
+        },
+        {
+          "date": "2025-W45",
+          "positive": 10,
+          "negative": 5
+        },
+        {
+          "date": "2025-W46",
+          "positive": 12,
+          "negative": 2
+        }
+      ]
     }
   ]
 }
@@ -483,7 +491,7 @@ Authorization: Bearer {jwt_token}
 **Response:**
 ```json
 {
-  "TWITTER": 15,
+  "X": 15,
   "REDDIT": 12,
   "YOUTUBE": 13,
   "INSTAGRAM": 10
@@ -509,7 +517,7 @@ Authorization: Bearer {jwt_token}
 - `entityId` - Entity ID (e.g., 1)
 
 **Query Parameters:**
-- `platform` - Filter by platform (TWITTER, REDDIT, YOUTUBE, INSTAGRAM) - Optional
+- `platform` - Filter by platform (X, REDDIT, YOUTUBE, INSTAGRAM) - Optional
 - `country` - Filter by country - Optional
 - `city` - Filter by city - Optional
 - `age` - Filter by author age - Optional
@@ -520,7 +528,7 @@ Authorization: Bearer {jwt_token}
 
 **Example Request:**
 ```
-GET /api/dashboard/1/mentions?platform=TWITTER&country=USA&page=0&size=5
+GET /api/dashboard/1/mentions?platform=X&country=USA&page=0&size=5
 ```
 
 **Response:**
@@ -530,7 +538,7 @@ GET /api/dashboard/1/mentions?platform=TWITTER&country=USA&page=0&size=5
     {
       "id": 1,
       "managedEntityId": 1,
-      "platform": "TWITTER",
+      "platform": "X",
       "postId": "The_Quantum_Paradox_post_0",
       "content": "This movie is absolutely amazing! Best film of the year!",
       "author": "movie_fan_123",
@@ -543,7 +551,7 @@ GET /api/dashboard/1/mentions?platform=TWITTER&country=USA&page=0&size=5
     {
       "id": 2,
       "managedEntityId": 1,
-      "platform": "TWITTER",
+      "platform": "X",
       "postId": "The_Quantum_Paradox_post_5",
       "content": "Incredible performance! Oscar-worthy for sure.",
       "author": "critic_sarah",
@@ -614,7 +622,7 @@ Authorization: Bearer {jwt_token}
 **Request Body:**
 ```json
 {
-  "platform": "TWITTER",
+  "platform": "X",
   "postIdToReplyTo": "tweet_12345",
   "replyText": "Thank you for your feedback! We appreciate your input and are always working to improve."
 }
@@ -900,7 +908,7 @@ The application comes pre-loaded with sample data:
 
 ### Mentions
 - 50 mentions per entity (200 total)
-- Distributed across all platforms (Twitter, Reddit, YouTube, Instagram)
+- Distributed across all platforms (X, Reddit, YouTube, Instagram)
 - Various sentiments (Positive, Negative, Neutral)
 - Dates spanning the last 90 days
 - Various locations and author demographics

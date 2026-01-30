@@ -64,11 +64,11 @@ public class DashboardService {
         return new CompetitorSnapshot(entity.getName(), totalMentions, positiveSentiment);
     }
     
-    public Map<String, List<TimeSeriesData>> getSentimentOverTime(
+    public SentimentOverTimeResponse getSentimentOverTime(
             TimePeriod period,
             List<Long> entityIds
     ) {
-        Map<String, List<TimeSeriesData>> result = new HashMap<>();
+        List<EntitySentimentData> entitySentiments = new ArrayList<>();
         
         Instant endDate = Instant.now();
         Instant startDate = calculateStartDate(period, endDate);
@@ -84,10 +84,10 @@ public class DashboardService {
             );
             
             List<TimeSeriesData> timeSeriesData = aggregateMentionsByPeriod(mentions, period, startDate, endDate);
-            result.put(entity.getName(), timeSeriesData);
+            entitySentiments.add(new EntitySentimentData(entity.getName(), timeSeriesData));
         }
         
-        return result;
+        return new SentimentOverTimeResponse(entitySentiments);
     }
     
     private Instant calculateStartDate(TimePeriod period, Instant endDate) {

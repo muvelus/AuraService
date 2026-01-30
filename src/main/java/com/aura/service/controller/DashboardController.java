@@ -34,12 +34,12 @@ public class DashboardController {
     }
     
     @GetMapping("/sentiment-over-time")
-    public ResponseEntity<Map<String, List<TimeSeriesData>>> getSentimentOverTime(
+    public ResponseEntity<SentimentOverTimeResponse> getSentimentOverTime(
             @PathVariable Long entityId,
             @RequestParam TimePeriod period,
             @RequestParam List<Long> entityIds
     ) {
-        Map<String, List<TimeSeriesData>> response = dashboardService.getSentimentOverTime(period, entityIds);
+        SentimentOverTimeResponse response = dashboardService.getSentimentOverTime(period, entityIds);
         return ResponseEntity.ok(response);
     }
     
