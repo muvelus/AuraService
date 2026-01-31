@@ -37,15 +37,6 @@ public class Mention {
     @Column
     private String author;
     
-    @Column
-    private Integer authorAge;
-    
-    @Column
-    private String locationCountry;
-    
-    @Column
-    private String locationCity;
-    
     @Column(nullable = false)
     private Instant postDate;
     

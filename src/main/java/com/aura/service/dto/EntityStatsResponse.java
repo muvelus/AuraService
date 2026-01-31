@@ -11,4 +11,5 @@ public class EntityStatsResponse {
     private long totalMentions;
     private double positiveSentiment;
     private double negativeSentiment;
+    private double neutralSentiment;
 }

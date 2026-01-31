@@ -12,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
@@ -34,11 +35,13 @@ public class DashboardService {
         long totalMentions = mentionRepository.countByManagedEntityId(entityId);
         long positiveMentions = mentionRepository.countByManagedEntityIdAndSentiment(entityId, Sentiment.POSITIVE);
         long negativeMentions = mentionRepository.countByManagedEntityIdAndSentiment(entityId, Sentiment.NEGATIVE);
+        long neutralMentions = mentionRepository.countByManagedEntityIdAndSentiment(entityId, Sentiment.NEUTRAL);
         
         double positiveSentiment = totalMentions > 0 ? (double) positiveMentions / totalMentions : 0.0;
         double negativeSentiment = totalMentions > 0 ? (double) negativeMentions / totalMentions : 0.0;
+        double neutralSentiment = totalMentions > 0 ? (double) neutralMentions / totalMentions : 0.0;
         
-        return new EntityStatsResponse(totalMentions, positiveSentiment, negativeSentiment);
+        return new EntityStatsResponse(totalMentions, positiveSentiment, negativeSentiment, neutralSentiment);
     }
     
     public List<CompetitorSnapshot> getCompetitorSnapshot(Long entityId) {
@@ -169,24 +172,18 @@ public class DashboardService {
     public Page<MentionResponse> getMentions(
             Long entityId,
             Platform platform,
-            String country,
-            String city,
-            Integer age,
-            Instant startDate,
-            Instant endDate,
             int page,
             int size
     ) {
-        Pageable pageable = PageRequest.of(page, size);
+        Pageable pageable = PageRequest.of(page, size, Sort.by("post_date").descending());
+        
+        List<Long> entityIds = (entityId == null) ? new ArrayList<>() : Collections.singletonList(entityId);
+        
+        String platformName = (platform == null) ? null : platform.name();
         
         Page<Mention> mentions = mentionRepository.findFilteredMentions(
-                entityId,
-                platform,
-                country,
-                city,
-                age,
-                startDate,
-                endDate,
+                entityIds,
+                platformName,
                 pageable
         );
         
@@ -201,9 +198,6 @@ public class DashboardService {
                 mention.getPostId(),
                 mention.getContent(),
                 mention.getAuthor(),
-                mention.getAuthorAge(),
-                mention.getLocationCountry(),
-                mention.getLocationCity(),
                 mention.getPostDate(),
                 mention.getSentiment()
         );

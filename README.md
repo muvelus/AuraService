@@ -97,9 +97,6 @@ CREATE TABLE mentions (
     post_id VARCHAR(255) UNIQUE NOT NULL,
     content TEXT,
     author VARCHAR(255),
-    author_age INTEGER,
-    location_country VARCHAR(255),
-    location_city VARCHAR(255),
     post_date TIMESTAMP NOT NULL,
     sentiment VARCHAR(255) NOT NULL,
     CONSTRAINT fk_mentions_managed_entities FOREIGN KEY (managed_entity_id) REFERENCES managed_entities(id)
@@ -512,7 +509,7 @@ Authorization: Bearer {jwt_token}
 
 **Endpoint:** `GET /api/dashboard/{entityId}/mentions`
 
-**Description:** Get a paginated list of mentions with optional filters
+**Description:** Get a paginated list of mentions with optional filters. The results are sorted by time, with the latest mentions appearing first.
 
 **Headers:**
 ```
@@ -524,17 +521,12 @@ Authorization: Bearer {jwt_token}
 
 **Query Parameters:**
 - `platform` - Filter by platform (X, REDDIT, YOUTUBE, INSTAGRAM) - Optional
-- `country` - Filter by country - Optional
-- `city` - Filter by city - Optional
-- `age` - Filter by author age - Optional
-- `startDate` - Filter by start date (ISO 8601 format) - Optional
-- `endDate` - Filter by end date (ISO 8601 format) - Optional
 - `page` - Page number (default: 0)
 - `size` - Page size (default: 10)
 
 **Example Request:**
 ```
-GET /api/dashboard/1/mentions?platform=X&country=USA&page=0&size=5
+GET /api/dashboard/1/mentions?platform=X&page=0&size=5
 ```
 
 **Response:**
@@ -548,9 +540,6 @@ GET /api/dashboard/1/mentions?platform=X&country=USA&page=0&size=5
       "postId": "The_Quantum_Paradox_post_0",
       "content": "This movie is absolutely amazing! Best film of the year!",
       "author": "movie_fan_123",
-      "authorAge": 28,
-      "locationCountry": "USA",
-      "locationCity": "New York",
       "postDate": "2025-11-05T10:30:00Z",
       "sentiment": "POSITIVE"
     },
@@ -561,9 +550,6 @@ GET /api/dashboard/1/mentions?platform=X&country=USA&page=0&size=5
       "postId": "The_Quantum_Paradox_post_5",
       "content": "Incredible performance! Oscar-worthy for sure.",
       "author": "critic_sarah",
-      "authorAge": 35,
-      "locationCountry": "USA",
-      "locationCity": "Los Angeles",
       "postDate": "2025-11-03T14:20:00Z",
       "sentiment": "POSITIVE"
     }
@@ -973,6 +959,7 @@ com.aura.service
 
 - **SecurityConfig:** Spring Security configuration with JWT
 - **JwtService:** JWT token generation and validation
+-
 - **DataInitializer:** Pre-loads sample data on startup
 - **GlobalExceptionHandler:** Centralized error handling
 - **Mock Services:** LLM, Social Media, and Analytics mock implementations

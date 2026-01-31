@@ -53,16 +53,11 @@ public class DashboardController {
     public ResponseEntity<Page<MentionResponse>> getMentions(
             @PathVariable Long entityId,
             @RequestParam(required = false) Platform platform,
-            @RequestParam(required = false) String country,
-            @RequestParam(required = false) String city,
-            @RequestParam(required = false) Integer age,
-            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) Instant startDate,
-            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) Instant endDate,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size
     ) {
         Page<MentionResponse> response = dashboardService.getMentions(
-                entityId, platform, country, city, age, startDate, endDate, page, size
+                entityId, platform, page, size
         );
         return ResponseEntity.ok(response);
     }

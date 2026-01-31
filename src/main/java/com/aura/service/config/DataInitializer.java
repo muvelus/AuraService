@@ -139,10 +139,7 @@ public class DataInitializer implements CommandLineRunner {
                     mention.setContent(content);
                     
                     mention.setAuthor(authors[random.nextInt(authors.length)]);
-                    mention.setAuthorAge(random.nextInt(50) + 15);
-                    mention.setLocationCountry(countries[random.nextInt(countries.length)]);
-                    mention.setLocationCity(cities[random.nextInt(cities.length)]);
-                    
+
                     int daysAgo = random.nextInt(90);
                     mention.setPostDate(Instant.now().minus(daysAgo, ChronoUnit.DAYS));
                     

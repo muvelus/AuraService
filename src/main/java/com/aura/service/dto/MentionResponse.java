@@ -18,9 +18,6 @@ public class MentionResponse {
     private String postId;
     private String content;
     private String author;
-    private Integer authorAge;
-    private String locationCountry;
-    private String locationCity;
     private Instant postDate;
     private Sentiment sentiment;
 }
