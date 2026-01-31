@@ -178,7 +178,8 @@ Authorization: Bearer {jwt_token}
   "name": "The Matrix Resurrections",
   "type": "MOVIE",
   "director": "Lana Wachowski",
-  "actors": ["Keanu Reeves", "Carrie-Anne Moss", "Yahya Abdul-Mateen II"]
+  "actors": ["Keanu Reeves", "Carrie-Anne Moss", "Yahya Abdul-Mateen II"],
+  "keywords": ["keanureeves", "matrix", "sequel"]
 }
 ```
 
@@ -190,6 +191,7 @@ Authorization: Bearer {jwt_token}
   "type": "MOVIE",
   "director": "Lana Wachowski",
   "actors": ["Keanu Reeves", "Carrie-Anne Moss", "Yahya Abdul-Mateen II"],
+  "keywords": ["keanureeves", "matrix", "sequel"],
   "competitors": []
 }
 ```
@@ -256,6 +258,7 @@ Authorization: Bearer {jwt_token}
   "type": "MOVIE",
   "director": "Christopher Nolan",
   "actors": ["Leonardo DiCaprio", "Emma Stone", "Tom Hardy"],
+  "keywords": ["sci-fi", "thriller", "mind-bending"],
   "competitors": [
     {
       "id": 3,
@@ -304,6 +307,7 @@ Authorization: Bearer {jwt_token}
   "type": "MOVIE",
   "director": "Christopher Nolan",
   "actors": ["Leonardo DiCaprio", "Emma Stone", "Tom Hardy"],
+  "keywords": ["sci-fi", "thriller", "mind-bending"],
   "competitors": [
     {
       "id": 3,
@@ -328,9 +332,58 @@ Authorization: Bearer {jwt_token}
 
 ---
 
+### 7. Update Keywords
+
+**Endpoint:** `PUT /api/entities/{id}/keywords`
+
+**Description:** Update the list of keywords for an entity
+
+**Headers:**
+```
+Authorization: Bearer {jwt_token}
+```
+
+**Path Parameters:**
+- `id` - Entity ID (e.g., 1)
+
+**Request Body:**
+```json
+{
+  "keywords": ["new-keyword-1", "new-keyword-2"]
+}
+```
+
+**Response:**
+```json
+{
+  "id": 1,
+  "name": "The Quantum Paradox",
+  "type": "MOVIE",
+  "director": "Christopher Nolan",
+  "actors": ["Leonardo DiCaprio", "Emma Stone", "Tom Hardy"],
+  "keywords": ["new-keyword-1", "new-keyword-2"],
+  "competitors": [
+    {
+      "id": 3,
+      "name": "Inception 2",
+      "type": "MOVIE"
+    },
+    {
+      "id": 4,
+      "name": "Interstellar Reloaded",
+      "type": "MOVIE"
+    }
+  ]
+}
+```
+
+**Status Code:** `200 OK`
+
+---
+
 ## Dashboard APIs
 
-### 7. Get Entity Statistics
+### 8. Get Entity Statistics
 
 **Endpoint:** `GET /api/dashboard/{entityId}/stats`
 
@@ -357,7 +410,7 @@ Authorization: Bearer {jwt_token}
 
 ---
 
-### 8. Get Competitor Snapshot
+### 9. Get Competitor Snapshot
 
 **Endpoint:** `GET /api/dashboard/{entityId}/competitor-snapshot`
 
@@ -396,7 +449,7 @@ Authorization: Bearer {jwt_token}
 
 ---
 
-### 9. Get Sentiment Over Time
+### 10. Get Sentiment Over Time
 
 **Endpoint:** `GET /api/dashboard/{entityId}/sentiment-over-time`
 
@@ -477,7 +530,7 @@ GET /api/dashboard/1/sentiment-over-time?period=WEEK&entityIds=1,3
 
 ---
 
-### 10. Get Platform Mentions
+### 11. Get Platform Mentions
 
 **Endpoint:** `GET /api/dashboard/{entityId}/platform-mentions`
 
@@ -505,7 +558,7 @@ Authorization: Bearer {jwt_token}
 
 ---
 
-### 11. Get Filtered Mentions
+### 12. Get Filtered Mentions
 
 **Endpoint:** `GET /api/dashboard/{entityId}/mentions`
 
@@ -570,7 +623,7 @@ GET /api/dashboard/1/mentions?platform=X&page=0&size=5
 
 ## Interaction APIs
 
-### 12. Generate Reply
+### 13. Generate Reply
 
 **Endpoint:** `POST /api/interact/generate-reply`
 
@@ -600,7 +653,7 @@ Authorization: Bearer {jwt_token}
 
 ---
 
-### 13. Post Response
+### 14. Post Response
 
 **Endpoint:** `POST /api/interact/respond`
 
@@ -633,7 +686,7 @@ Authorization: Bearer {jwt_token}
 
 ## Crisis Management APIs
 
-### 14. Generate Crisis Plan
+### 15. Generate Crisis Plan
 
 **Endpoint:** `POST /api/crisis/generate-plan`
 
@@ -665,7 +718,7 @@ Authorization: Bearer {jwt_token}
 
 ## Analytics APIs
 
-### 15. Get Box Office Prediction
+### 16. Get Box Office Prediction
 
 **Endpoint:** `GET /api/analytics/box-office-prediction`
 
@@ -698,7 +751,7 @@ GET /api/analytics/box-office-prediction?movieId=1
 
 ---
 
-### 16. Get Trending Genre
+### 17. Get Trending Genre
 
 **Endpoint:** `GET /api/analytics/trending-genre`
 
@@ -731,7 +784,7 @@ GET /api/analytics/trending-genre?date=2025-11-08
 
 ---
 
-### 17. Get Hit Genre Prediction
+### 18. Get Hit Genre Prediction
 
 **Endpoint:** `GET /api/analytics/hit-genre-prediction`
 
@@ -755,7 +808,7 @@ Authorization: Bearer {jwt_token}
 
 ---
 
-### 18. Get Best Genre
+### 19. Get Best Genre
 
 **Endpoint:** `GET /api/analytics/best-genre`
 
@@ -788,7 +841,7 @@ GET /api/analytics/best-genre?date=2025-11-08
 
 ---
 
-### 19. Get Top Box Office
+### 20. Get Top Box Office
 
 **Endpoint:** `GET /api/analytics/top-box-office`
 

@@ -4,6 +4,7 @@ import com.aura.service.dto.CreateEntityRequest;
 import com.aura.service.dto.EntityBasicInfo;
 import com.aura.service.dto.EntityDetailResponse;
 import com.aura.service.dto.UpdateCompetitorsRequest;
+import com.aura.service.dto.UpdateKeywordsRequest;
 import com.aura.service.entity.ManagedEntity;
 import com.aura.service.repository.ManagedEntityRepository;
 import lombok.RequiredArgsConstructor;
@@ -26,6 +27,7 @@ public class EntityService {
         entity.setType(request.getType());
         entity.setDirector(request.getDirector());
         entity.setActors(request.getActors());
+        entity.setKeywords(request.getKeywords());
         
         entity = entityRepository.save(entity);
         
@@ -56,6 +58,18 @@ public class EntityService {
         
         return mapToDetailResponse(entity);
     }
+
+    @Transactional
+    public EntityDetailResponse updateKeywords(Long id, UpdateKeywordsRequest request) {
+        ManagedEntity entity = entityRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Entity not found with id: " + id));
+        
+        entity.setKeywords(request.getKeywords());
+        
+        entity = entityRepository.save(entity);
+        
+        return mapToDetailResponse(entity);
+    }
     
     private EntityBasicInfo mapToBasicInfo(ManagedEntity entity) {
         return new EntityBasicInfo(entity.getId(), entity.getName(), entity.getType());
@@ -68,6 +82,7 @@ public class EntityService {
         response.setType(entity.getType());
         response.setDirector(entity.getDirector());
         response.setActors(entity.getActors());
+        response.setKeywords(entity.getKeywords());
         response.setCompetitors(
                 entity.getCompetitors().stream()
                         .map(this::mapToBasicInfo)

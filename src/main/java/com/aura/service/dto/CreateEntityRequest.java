@@ -24,4 +24,6 @@ public class CreateEntityRequest {
     private String director;
     
     private List<String> actors = new ArrayList<>();
+
+    private List<String> keywords = new ArrayList<>();
 }

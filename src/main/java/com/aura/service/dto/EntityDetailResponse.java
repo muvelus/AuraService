@@ -17,5 +17,6 @@ public class EntityDetailResponse {
     private EntityType type;
     private String director;
     private List<String> actors = new ArrayList<>();
+    private List<String> keywords = new ArrayList<>();
     private List<EntityBasicInfo> competitors = new ArrayList<>();
 }

@@ -4,6 +4,7 @@ import com.aura.service.dto.CreateEntityRequest;
 import com.aura.service.dto.EntityBasicInfo;
 import com.aura.service.dto.EntityDetailResponse;
 import com.aura.service.dto.UpdateCompetitorsRequest;
+import com.aura.service.dto.UpdateKeywordsRequest;
 import com.aura.service.service.EntityService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -43,6 +44,15 @@ public class EntityController {
             @Valid @RequestBody UpdateCompetitorsRequest request
     ) {
         EntityDetailResponse response = entityService.updateCompetitors(id, request);
+        return ResponseEntity.ok(response);
+    }
+
+    @PutMapping("/{id}/keywords")
+    public ResponseEntity<EntityDetailResponse> updateKeywords(
+            @PathVariable Long id,
+            @Valid @RequestBody UpdateKeywordsRequest request
+    ) {
+        EntityDetailResponse response = entityService.updateKeywords(id, request);
         return ResponseEntity.ok(response);
     }
 }
