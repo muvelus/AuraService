@@ -1,6 +1,5 @@
 package com.aura.service.entity;
 
-import com.aura.service.enums.EntityType;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -23,9 +22,8 @@ public class ManagedEntity {
     @Column(nullable = false)
     private String name;
     
-    @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private EntityType type;
+    private String type;
     
     @Column
     private String director;

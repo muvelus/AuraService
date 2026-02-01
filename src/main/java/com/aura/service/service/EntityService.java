@@ -21,10 +21,10 @@ public class EntityService {
     private final ManagedEntityRepository entityRepository;
     
     @Transactional
-    public EntityDetailResponse createEntity(CreateEntityRequest request) {
+    public EntityDetailResponse createEntity(String entityType, CreateEntityRequest request) {
         ManagedEntity entity = new ManagedEntity();
         entity.setName(request.getName());
-        entity.setType(request.getType());
+        entity.setType(entityType);
         entity.setDirector(request.getDirector());
         entity.setActors(request.getActors());
         entity.setKeywords(request.getKeywords());
@@ -34,22 +34,28 @@ public class EntityService {
         return mapToDetailResponse(entity);
     }
     
-    public List<EntityBasicInfo> getAllEntities() {
-        return entityRepository.findAll().stream()
+    public List<EntityBasicInfo> getAllEntities(String entityType) {
+        return entityRepository.findByType(entityType).stream()
                 .map(this::mapToBasicInfo)
                 .collect(Collectors.toList());
     }
     
-    public EntityDetailResponse getEntityById(Long id) {
+    public EntityDetailResponse getEntityById(String entityType, Long id) {
         ManagedEntity entity = entityRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Entity not found with id: " + id));
+        if (!entity.getType().equalsIgnoreCase(entityType)) {
+            throw new RuntimeException("Entity with id " + id + " is not of type " + entityType);
+        }
         return mapToDetailResponse(entity);
     }
     
     @Transactional
-    public EntityDetailResponse updateCompetitors(Long id, UpdateCompetitorsRequest request) {
+    public EntityDetailResponse updateCompetitors(String entityType, Long id, UpdateCompetitorsRequest request) {
         ManagedEntity entity = entityRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Entity not found with id: " + id));
+        if (!entity.getType().equalsIgnoreCase(entityType)) {
+            throw new RuntimeException("Entity with id " + id + " is not of type " + entityType);
+        }
         
         List<ManagedEntity> competitors = entityRepository.findAllById(request.getCompetitorIds());
         entity.setCompetitors(competitors);
@@ -60,9 +66,12 @@ public class EntityService {
     }
 
     @Transactional
-    public EntityDetailResponse updateKeywords(Long id, UpdateKeywordsRequest request) {
+    public EntityDetailResponse updateKeywords(String entityType, Long id, UpdateKeywordsRequest request) {
         ManagedEntity entity = entityRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Entity not found with id: " + id));
+        if (!entity.getType().equalsIgnoreCase(entityType)) {
+            throw new RuntimeException("Entity with id " + id + " is not of type " + entityType);
+        }
         
         entity.setKeywords(request.getKeywords());
         

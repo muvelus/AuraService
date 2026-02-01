@@ -163,7 +163,7 @@ All endpoints except `/api/auth/*` require JWT authentication. Include the JWT t
 
 ### 3. Create Managed Entity
 
-**Endpoint:** `POST /api/entities`
+**Endpoint:** `POST /api/entities/{entityType}`
 
 **Description:** Create a new managed entity (celebrity or movie)
 
@@ -171,6 +171,9 @@ All endpoints except `/api/auth/*` require JWT authentication. Include the JWT t
 ```
 Authorization: Bearer {jwt_token}
 ```
+
+**Path Parameters:**
+- `entityType` - The type of the entity (e.g., `movie`, `celebrity`)
 
 **Request Body:**
 ```json
@@ -202,14 +205,17 @@ Authorization: Bearer {jwt_token}
 
 ### 4. Get All Entities
 
-**Endpoint:** `GET /api/entities`
+**Endpoint:** `GET /api/entities/{entityType}`
 
-**Description:** Retrieve a list of all managed entities
+**Description:** Retrieve a list of all managed entities of a specific type
 
 **Headers:**
 ```
 Authorization: Bearer {jwt_token}
 ```
+
+**Path Parameters:**
+- `entityType` - The type of the entity (e.g., `movie`, `celebrity`)
 
 **Response:**
 ```json
@@ -218,11 +224,6 @@ Authorization: Bearer {jwt_token}
     "id": 1,
     "name": "The Quantum Paradox",
     "type": "MOVIE"
-  },
-  {
-    "id": 2,
-    "name": "Emma Stone",
-    "type": "CELEBRITY"
   },
   {
     "id": 3,
@@ -238,7 +239,7 @@ Authorization: Bearer {jwt_token}
 
 ### 5. Get Entity by ID
 
-**Endpoint:** `GET /api/entities/{id}`
+**Endpoint:** `GET /api/entities/{entityType}/{id}`
 
 **Description:** Retrieve detailed information about a specific entity
 
@@ -248,6 +249,7 @@ Authorization: Bearer {jwt_token}
 ```
 
 **Path Parameters:**
+- `entityType` - The type of the entity (e.g., `movie`, `celebrity`)
 - `id` - Entity ID (e.g., 1)
 
 **Response:**
@@ -280,7 +282,7 @@ Authorization: Bearer {jwt_token}
 
 ### 6. Update Competitors
 
-**Endpoint:** `PUT /api/entities/{id}/competitors`
+**Endpoint:** `PUT /api/entities/{entityType}/{id}/competitors`
 
 **Description:** Update the list of competitors for an entity
 
@@ -290,6 +292,7 @@ Authorization: Bearer {jwt_token}
 ```
 
 **Path Parameters:**
+- `entityType` - The type of the entity (e.g., `movie`, `celebrity`)
 - `id` - Entity ID (e.g., 1)
 
 **Request Body:**
@@ -334,7 +337,7 @@ Authorization: Bearer {jwt_token}
 
 ### 7. Update Keywords
 
-**Endpoint:** `PUT /api/entities/{id}/keywords`
+**Endpoint:** `PUT /api/entities/{entityType}/{id}/keywords`
 
 **Description:** Update the list of keywords for an entity
 
@@ -344,6 +347,7 @@ Authorization: Bearer {jwt_token}
 ```
 
 **Path Parameters:**
+- `entityType` - The type of the entity (e.g., `movie`, `celebrity`)
 - `id` - Entity ID (e.g., 1)
 
 **Request Body:**
@@ -385,7 +389,7 @@ Authorization: Bearer {jwt_token}
 
 ### 8. Get Entity Statistics
 
-**Endpoint:** `GET /api/dashboard/{entityId}/stats`
+**Endpoint:** `GET /api/dashboard/{entityType}/{entityId}/stats`
 
 **Description:** Get core statistics for an entity
 
@@ -395,6 +399,7 @@ Authorization: Bearer {jwt_token}
 ```
 
 **Path Parameters:**
+- `entityType` - The type of the entity (e.g., `movie`, `celebrity`)
 - `entityId` - Entity ID (e.g., 1)
 
 **Response:**
@@ -412,7 +417,7 @@ Authorization: Bearer {jwt_token}
 
 ### 9. Get Competitor Snapshot
 
-**Endpoint:** `GET /api/dashboard/{entityId}/competitor-snapshot`
+**Endpoint:** `GET /api/dashboard/{entityType}/{entityId}/competitor-snapshot`
 
 **Description:** Get statistics for the entity and its competitors
 
@@ -422,6 +427,7 @@ Authorization: Bearer {jwt_token}
 ```
 
 **Path Parameters:**
+- `entityType` - The type of the entity (e.g., `movie`, `celebrity`)
 - `entityId` - Entity ID (e.g., 1)
 
 **Response:**
@@ -451,7 +457,7 @@ Authorization: Bearer {jwt_token}
 
 ### 10. Get Sentiment Over Time
 
-**Endpoint:** `GET /api/dashboard/{entityId}/sentiment-over-time`
+**Endpoint:** `GET /api/dashboard/{entityType}/{entityId}/sentiment-over-time`
 
 **Description:** Get time-series data for sentiment analysis
 
@@ -461,6 +467,7 @@ Authorization: Bearer {jwt_token}
 ```
 
 **Path Parameters:**
+- `entityType` - The type of the entity (e.g., `movie`, `celebrity`)
 - `entityId` - Entity ID (e.g., 1)
 
 **Query Parameters:**
@@ -469,7 +476,7 @@ Authorization: Bearer {jwt_token}
 
 **Example Request:**
 ```
-GET /api/dashboard/1/sentiment-over-time?period=WEEK&entityIds=1,3
+GET /api/dashboard/movie/1/sentiment-over-time?period=WEEK&entityIds=1,3
 ```
 
 **Response:**
@@ -532,7 +539,7 @@ GET /api/dashboard/1/sentiment-over-time?period=WEEK&entityIds=1,3
 
 ### 11. Get Platform Mentions
 
-**Endpoint:** `GET /api/dashboard/{entityId}/platform-mentions`
+**Endpoint:** `GET /api/dashboard/{entityType}/{entityId}/platform-mentions`
 
 **Description:** Get mention counts broken down by platform
 
@@ -542,6 +549,7 @@ Authorization: Bearer {jwt_token}
 ```
 
 **Path Parameters:**
+- `entityType` - The type of the entity (e.g., `movie`, `celebrity`)
 - `entityId` - Entity ID (e.g., 1)
 
 **Response:**
@@ -560,7 +568,7 @@ Authorization: Bearer {jwt_token}
 
 ### 12. Get Filtered Mentions
 
-**Endpoint:** `GET /api/dashboard/{entityId}/mentions`
+**Endpoint:** `GET /api/dashboard/{entityType}/{entityId}/mentions`
 
 **Description:** Get a paginated list of mentions with optional filters. The results are sorted by time, with the latest mentions appearing first.
 
@@ -570,6 +578,7 @@ Authorization: Bearer {jwt_token}
 ```
 
 **Path Parameters:**
+- `entityType` - The type of the entity (e.g., `movie`, `celebrity`)
 - `entityId` - Entity ID (e.g., 1)
 
 **Query Parameters:**
@@ -579,7 +588,7 @@ Authorization: Bearer {jwt_token}
 
 **Example Request:**
 ```
-GET /api/dashboard/1/mentions?platform=X&page=0&size=5
+GET /api/dashboard/movie/1/mentions?platform=X&page=0&size=5
 ```
 
 **Response:**
@@ -973,13 +982,13 @@ curl -X POST http://localhost:8080/api/auth/login \
 
 2. **Use the token for authenticated requests:**
 ```bash
-curl -X GET http://localhost:8080/api/entities \
+curl -X GET http://localhost:8080/api/entities/movie \
   -H "Authorization: Bearer YOUR_JWT_TOKEN_HERE"
 ```
 
 3. **Get entity statistics:**
 ```bash
-curl -X GET http://localhost:8080/api/dashboard/1/stats \
+curl -X GET http://localhost:8080/api/dashboard/movie/1/stats \
   -H "Authorization: Bearer YOUR_JWT_TOKEN_HERE"
 ```
 

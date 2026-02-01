@@ -52,26 +52,26 @@ public class DataInitializer implements CommandLineRunner {
         if (entityRepository.count() == 0) {
             ManagedEntity movie = new ManagedEntity();
             movie.setName("The Quantum Paradox");
-            movie.setType(EntityType.MOVIE);
+            movie.setType(EntityType.MOVIE.name());
             movie.setDirector("Christopher Nolan");
             movie.setActors(Arrays.asList("Leonardo DiCaprio", "Emma Stone", "Tom Hardy"));
             entityRepository.save(movie);
             
             ManagedEntity celebrity = new ManagedEntity();
             celebrity.setName("Emma Stone");
-            celebrity.setType(EntityType.CELEBRITY);
+            celebrity.setType(EntityType.CELEBRITY.name());
             entityRepository.save(celebrity);
             
             ManagedEntity competitor1 = new ManagedEntity();
             competitor1.setName("Inception 2");
-            competitor1.setType(EntityType.MOVIE);
+            competitor1.setType(EntityType.MOVIE.name());
             competitor1.setDirector("Denis Villeneuve");
             competitor1.setActors(Arrays.asList("Ryan Gosling", "Margot Robbie"));
             entityRepository.save(competitor1);
             
             ManagedEntity competitor2 = new ManagedEntity();
             competitor2.setName("Interstellar Reloaded");
-            competitor2.setType(EntityType.MOVIE);
+            competitor2.setType(EntityType.MOVIE.name());
             competitor2.setDirector("James Cameron");
             competitor2.setActors(Arrays.asList("Zendaya", "Timothée Chalamet"));
             entityRepository.save(competitor2);

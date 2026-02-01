@@ -28,7 +28,7 @@ public class CrisisController {
         String prompt = String.format(
                 "Generate a detailed crisis management plan for %s (%s) regarding the following crisis: %s",
                 entity.getName(),
-                entity.getType().name(),
+                entity.getType(),
                 request.getCrisisDescription()
         );
         

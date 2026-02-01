@@ -23,11 +23,11 @@ public class AuraServiceApplication {
         System.out.println("  GET  /api/entities - List all entities");
         System.out.println("  GET  /api/entities/{id} - Get entity details");
         System.out.println("  PUT  /api/entities/{id}/competitors - Update competitors");
-        System.out.println("  GET  /api/dashboard/{entityId}/stats - Get entity stats");
-        System.out.println("  GET  /api/dashboard/{entityId}/competitor-snapshot - Get competitor comparison");
-        System.out.println("  GET  /api/dashboard/{entityId}/sentiment-over-time - Get sentiment time series");
-        System.out.println("  GET  /api/dashboard/{entityId}/platform-mentions - Get platform breakdown");
-        System.out.println("  GET  /api/dashboard/{entityId}/mentions - Get filtered mentions");
+        System.out.println("  GET  /api/dashboard/{entityType}/{entityId}/stats - Get entity stats");
+        System.out.println("  GET  /api/dashboard/{entityType}/{entityId}/competitor-snapshot - Get competitor comparison");
+        System.out.println("  GET  /api/dashboard/{entityType}/{entityId}/sentiment-over-time - Get sentiment time series");
+        System.out.println("  GET  /api/dashboard/{entityType}/{entityId}/platform-mentions - Get platform breakdown");
+        System.out.println("  GET  /api/dashboard/{entityType}/{entityId}/mentions - Get filtered mentions");
         System.out.println("  POST /api/interact/generate-reply - Generate AI reply");
         System.out.println("  POST /api/interact/respond - Post reply to platform");
         System.out.println("  POST /api/crisis/generate-plan - Generate crisis plan");

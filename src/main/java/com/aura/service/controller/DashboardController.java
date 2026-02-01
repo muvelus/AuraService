@@ -15,49 +15,51 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/api/dashboard/{entityId}")
+@RequestMapping("/api/dashboard/{entityType}/{entityId}")
 @RequiredArgsConstructor
 public class DashboardController {
     
     private final DashboardService dashboardService;
     
     @GetMapping("/stats")
-    public ResponseEntity<EntityStatsResponse> getStats(@PathVariable Long entityId) {
-        EntityStatsResponse response = dashboardService.getEntityStats(entityId);
+    public ResponseEntity<EntityStatsResponse> getStats(@PathVariable String entityType, @PathVariable Long entityId) {
+        EntityStatsResponse response = dashboardService.getEntityStats(entityType, entityId);
         return ResponseEntity.ok(response);
     }
     
     @GetMapping("/competitor-snapshot")
-    public ResponseEntity<List<CompetitorSnapshot>> getCompetitorSnapshot(@PathVariable Long entityId) {
-        List<CompetitorSnapshot> response = dashboardService.getCompetitorSnapshot(entityId);
+    public ResponseEntity<List<CompetitorSnapshot>> getCompetitorSnapshot(@PathVariable String entityType, @PathVariable Long entityId) {
+        List<CompetitorSnapshot> response = dashboardService.getCompetitorSnapshot(entityType, entityId);
         return ResponseEntity.ok(response);
     }
     
     @GetMapping("/sentiment-over-time")
     public ResponseEntity<SentimentOverTimeResponse> getSentimentOverTime(
+            @PathVariable String entityType,
             @PathVariable Long entityId,
             @RequestParam TimePeriod period,
             @RequestParam List<Long> entityIds
     ) {
-        SentimentOverTimeResponse response = dashboardService.getSentimentOverTime(period, entityIds);
+        SentimentOverTimeResponse response = dashboardService.getSentimentOverTime(entityType, entityId, period, entityIds);
         return ResponseEntity.ok(response);
     }
     
     @GetMapping("/platform-mentions")
-    public ResponseEntity<Map<String, Long>> getPlatformMentions(@PathVariable Long entityId) {
-        Map<String, Long> response = dashboardService.getPlatformMentions(entityId);
+    public ResponseEntity<Map<String, Long>> getPlatformMentions(@PathVariable String entityType, @PathVariable Long entityId) {
+        Map<String, Long> response = dashboardService.getPlatformMentions(entityType, entityId);
         return ResponseEntity.ok(response);
     }
     
     @GetMapping("/mentions")
     public ResponseEntity<Page<MentionResponse>> getMentions(
+            @PathVariable String entityType,
             @PathVariable Long entityId,
             @RequestParam(required = false) Platform platform,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size
     ) {
         Page<MentionResponse> response = dashboardService.getMentions(
-                entityId, platform, page, size
+                entityType, entityId, platform, page, size
         );
         return ResponseEntity.ok(response);
     }

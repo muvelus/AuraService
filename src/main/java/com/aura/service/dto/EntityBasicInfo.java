@@ -1,6 +1,5 @@
 package com.aura.service.dto;
 
-import com.aura.service.enums.EntityType;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -11,5 +10,5 @@ import lombok.NoArgsConstructor;
 public class EntityBasicInfo {
     private Long id;
     private String name;
-    private EntityType type;
+    private String type;
 }

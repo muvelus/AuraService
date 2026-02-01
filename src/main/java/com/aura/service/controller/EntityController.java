@@ -14,45 +14,47 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/entities")
+@RequestMapping("/api/entities/{entityType}")
 @RequiredArgsConstructor
 public class EntityController {
     
     private final EntityService entityService;
     
     @PostMapping
-    public ResponseEntity<EntityDetailResponse> createEntity(@Valid @RequestBody CreateEntityRequest request) {
-        EntityDetailResponse response = entityService.createEntity(request);
+    public ResponseEntity<EntityDetailResponse> createEntity(@PathVariable String entityType, @Valid @RequestBody CreateEntityRequest request) {
+        EntityDetailResponse response = entityService.createEntity(entityType.toUpperCase(), request);
         return ResponseEntity.ok(response);
     }
     
     @GetMapping
-    public ResponseEntity<List<EntityBasicInfo>> getAllEntities() {
-        List<EntityBasicInfo> entities = entityService.getAllEntities();
+    public ResponseEntity<List<EntityBasicInfo>> getAllEntities(@PathVariable String entityType) {
+        List<EntityBasicInfo> entities = entityService.getAllEntities(entityType.toUpperCase());
         return ResponseEntity.ok(entities);
     }
     
     @GetMapping("/{id}")
-    public ResponseEntity<EntityDetailResponse> getEntityById(@PathVariable Long id) {
-        EntityDetailResponse response = entityService.getEntityById(id);
+    public ResponseEntity<EntityDetailResponse> getEntityById(@PathVariable String entityType, @PathVariable Long id) {
+        EntityDetailResponse response = entityService.getEntityById(entityType.toUpperCase(), id);
         return ResponseEntity.ok(response);
     }
     
     @PutMapping("/{id}/competitors")
     public ResponseEntity<EntityDetailResponse> updateCompetitors(
+            @PathVariable String entityType,
             @PathVariable Long id,
             @Valid @RequestBody UpdateCompetitorsRequest request
     ) {
-        EntityDetailResponse response = entityService.updateCompetitors(id, request);
+        EntityDetailResponse response = entityService.updateCompetitors(entityType.toUpperCase(), id, request);
         return ResponseEntity.ok(response);
     }
 
     @PutMapping("/{id}/keywords")
     public ResponseEntity<EntityDetailResponse> updateKeywords(
+            @PathVariable String entityType,
             @PathVariable Long id,
             @Valid @RequestBody UpdateKeywordsRequest request
     ) {
-        EntityDetailResponse response = entityService.updateKeywords(id, request);
+        EntityDetailResponse response = entityService.updateKeywords(entityType.toUpperCase(), id, request);
         return ResponseEntity.ok(response);
     }
 }

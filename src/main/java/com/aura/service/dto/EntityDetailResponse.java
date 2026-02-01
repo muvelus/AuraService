@@ -1,6 +1,5 @@
 package com.aura.service.dto;
 
-import com.aura.service.enums.EntityType;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -14,7 +13,7 @@ import java.util.List;
 public class EntityDetailResponse {
     private Long id;
     private String name;
-    private EntityType type;
+    private String type;
     private String director;
     private List<String> actors = new ArrayList<>();
     private List<String> keywords = new ArrayList<>();
