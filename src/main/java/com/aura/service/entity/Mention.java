@@ -43,4 +43,10 @@ public class Mention {
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private Sentiment sentiment;
+    
+    @Column
+    private String permalink;
+
+    @Column(name = "sentiment_score")
+    private Short sentimentScore;
 }

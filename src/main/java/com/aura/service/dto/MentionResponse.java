@@ -20,4 +20,6 @@ public class MentionResponse {
     private String author;
     private Instant postDate;
     private Sentiment sentiment;
+    private String permalink;
+    private Short sentimentScore;
 }

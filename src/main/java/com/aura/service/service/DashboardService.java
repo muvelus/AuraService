@@ -204,7 +204,9 @@ public class DashboardService {
                 mention.getContent(),
                 mention.getAuthor(),
                 mention.getPostDate(),
-                mention.getSentiment()
+                mention.getSentiment(),
+                mention.getPermalink(),
+                mention.getSentimentScore()
         );
     }
 }
