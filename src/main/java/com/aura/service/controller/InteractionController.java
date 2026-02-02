@@ -25,7 +25,7 @@ public class InteractionController {
     @PostMapping("/generate-reply")
     public ResponseEntity<GenerateReplyResponse> generateReply(@Valid @RequestBody GenerateReplyRequest request) {
         String prompt = generateReplyPrompt
-                .replace("[Managed Entity]", request.getMovieOrCelebrityName())
+                .replace("[Managed Entity]", request.getManagedEntityName())
                 .replace("[Paste the user's post here]", request.getMentionContent())
                 .replace("[Positive / Negative / Neutral]", request.getSentiment().name());
 

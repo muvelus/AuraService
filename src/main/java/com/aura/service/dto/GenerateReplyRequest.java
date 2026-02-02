@@ -19,5 +19,5 @@ public class GenerateReplyRequest {
     private Sentiment sentiment;
 
     @NotBlank(message = "Movie title or celebrity name is required")
-    private String movieOrCelebrityName;
+    private String managedEntityName;
 }

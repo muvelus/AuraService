@@ -1,5 +1,6 @@
 package com.aura.service.service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -52,15 +53,20 @@ public class LLMServiceImpl implements LLMService {
 
         try {
             String response = restTemplate.postForObject(llmUrl, entity, String.class);
-            JsonNode root = objectMapper.readTree(response);
-            JsonNode replyNode = root.path("reply");
-            if (replyNode.isMissingNode()) {
-                replyNode = root.path("response");
+            try {
+                JsonNode root = objectMapper.readTree(response);
+                JsonNode replyNode = root.path("reply");
+                if (replyNode.isMissingNode()) {
+                    replyNode = root.path("response");
+                }
+                if (replyNode.isMissingNode()) {
+                    replyNode = root.path("generated_text");
+                }
+                return replyNode.isMissingNode() ? response : replyNode.asText();
+            } catch (JsonProcessingException e) {
+                // Not a JSON response, return as is.
+                return response;
             }
-            if (replyNode.isMissingNode()) {
-                replyNode = root.path("generated_text");
-            }
-            return replyNode.isMissingNode() ? response : replyNode.asText();
         } catch (Exception e) {
             System.err.println("Error calling LLM service: " + e.getMessage());
             return "Error generating reply from LLM.";
