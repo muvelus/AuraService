@@ -17,4 +17,7 @@ public class GenerateReplyRequest {
     
     @NotNull(message = "Sentiment is required")
     private Sentiment sentiment;
+
+    @NotBlank(message = "Movie title or celebrity name is required")
+    private String movieOrCelebrityName;
 }

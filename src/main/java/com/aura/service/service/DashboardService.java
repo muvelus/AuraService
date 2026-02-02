@@ -158,14 +158,16 @@ public class DashboardService {
         };
     }
     
-    public Map<String, Long> getPlatformMentions(String entityType, Long entityId) {
+    public Map<String, Map<String, Long>> getPlatformMentions(String entityType, Long entityId) {
         List<Object[]> results = mentionRepository.countByPlatformForEntity(entityId);
         
-        Map<String, Long> platformCounts = new HashMap<>();
+        Map<String, Map<String, Long>> platformCounts = new HashMap<>();
         for (Object[] result : results) {
             Platform platform = (Platform) result[0];
-            Long count = (Long) result[1];
-            platformCounts.put(platform.name(), count);
+            Sentiment sentiment = (Sentiment) result[1];
+            Long count = (Long) result[2];
+            
+            platformCounts.computeIfAbsent(platform.name(), k -> new HashMap<>()).put(sentiment.name(), count);
         }
         
         return platformCounts;

@@ -45,8 +45,8 @@ public class DashboardController {
     }
     
     @GetMapping("/platform-mentions")
-    public ResponseEntity<Map<String, Long>> getPlatformMentions(@PathVariable String entityType, @PathVariable Long entityId) {
-        Map<String, Long> response = dashboardService.getPlatformMentions(entityType, entityId);
+    public ResponseEntity<Map<String, Map<String, Long>>> getPlatformMentions(@PathVariable String entityType, @PathVariable Long entityId) {
+        Map<String, Map<String, Long>> response = dashboardService.getPlatformMentions(entityType, entityId);
         return ResponseEntity.ok(response);
     }
     
@@ -56,7 +56,7 @@ public class DashboardController {
             @PathVariable Long entityId,
             @RequestParam(required = false) Platform platform,
             @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size
+            @RequestParam(defaultValue = "" + Integer.MAX_VALUE) int size
     ) {
         Page<MentionResponse> response = dashboardService.getMentions(
                 entityType, entityId, platform, page, size

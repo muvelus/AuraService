@@ -22,7 +22,7 @@ public interface MentionRepository extends JpaRepository<Mention, Long> {
     
     long countByManagedEntityIdAndSentiment(Long entityId, Sentiment sentiment);
     
-    @Query("SELECT m.platform, COUNT(m) FROM Mention m WHERE m.managedEntity.id = :entityId GROUP BY m.platform")
+    @Query("SELECT m.platform, m.sentiment, COUNT(m) FROM Mention m WHERE m.managedEntity.id = :entityId GROUP BY m.platform, m.sentiment")
     List<Object[]> countByPlatformForEntity(@Param("entityId") Long entityId);
     
     @Query(value = "SELECT * FROM mentions m WHERE " +
