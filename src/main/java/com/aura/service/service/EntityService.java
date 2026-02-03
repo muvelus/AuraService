@@ -28,6 +28,9 @@ public class EntityService {
         entity.setDirector(request.getDirector());
         entity.setActors(request.getActors());
         entity.setKeywords(request.getKeywords());
+        if ("MOVIE".equalsIgnoreCase(entityType)) {
+            entity.setReleaseDate(request.getReleaseDate());
+        }
         
         entity = entityRepository.save(entity);
         
@@ -81,7 +84,12 @@ public class EntityService {
     }
     
     private EntityBasicInfo mapToBasicInfo(ManagedEntity entity) {
-        return new EntityBasicInfo(entity.getId(), entity.getName(), entity.getType());
+        EntityBasicInfo basicInfo = new EntityBasicInfo(entity.getId(), entity.getName(), entity.getType());
+        if ("MOVIE".equalsIgnoreCase(entity.getType())) {
+            basicInfo.setDirector(entity.getDirector());
+            basicInfo.setReleaseDate(entity.getReleaseDate());
+        }
+        return basicInfo;
     }
     
     private EntityDetailResponse mapToDetailResponse(ManagedEntity entity) {
@@ -97,6 +105,9 @@ public class EntityService {
                         .map(this::mapToBasicInfo)
                         .collect(Collectors.toList())
         );
+        if ("MOVIE".equalsIgnoreCase(entity.getType())) {
+            response.setReleaseDate(entity.getReleaseDate());
+        }
         return response;
     }
 }

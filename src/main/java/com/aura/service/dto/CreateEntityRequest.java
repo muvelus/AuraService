@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,4 +22,6 @@ public class CreateEntityRequest {
     private List<String> actors = new ArrayList<>();
 
     private List<String> keywords = new ArrayList<>();
+
+    private LocalDate releaseDate;
 }
