@@ -555,10 +555,26 @@ Authorization: Bearer {jwt_token}
 **Response:**
 ```json
 {
-  "X": 15,
-  "REDDIT": 12,
-  "YOUTUBE": 13,
-  "INSTAGRAM": 10
+    "INSTAGRAM": {
+        "POSITIVE": 37,
+        "NEGATIVE": 1,
+        "NEUTRAL": 3
+    },
+    "REDDIT": {
+        "POSITIVE": 13,
+        "NEGATIVE": 23,
+        "NEUTRAL": 14
+    },
+    "X": {
+        "POSITIVE": 43,
+        "NEGATIVE": 49,
+        "NEUTRAL": 9
+    },
+    "YOUTUBE": {
+        "POSITIVE": 212,
+        "NEGATIVE": 53,
+        "NEUTRAL": 13
+    }
 }
 ```
 
@@ -646,6 +662,7 @@ Authorization: Bearer {jwt_token}
 **Request Body:**
 ```json
 {
+  "managedEntityName": "The Quantum Paradox",
   "mentionContent": "This movie was terrible! Waste of money.",
   "sentiment": "NEGATIVE"
 }
@@ -729,7 +746,7 @@ Authorization: Bearer {jwt_token}
 
 ### 16. Get Box Office Prediction
 
-**Endpoint:** `GET /api/analytics/box-office-prediction`
+**Endpoint:** `GET /api/analytics/{movieId}`
 
 **Description:** Get predicted box office revenue for a movie (Mock analytics)
 
@@ -738,148 +755,47 @@ Authorization: Bearer {jwt_token}
 Authorization: Bearer {jwt_token}
 ```
 
-**Query Parameters:**
+**Path Parameters:**
 - `movieId` - Movie entity ID (e.g., 1)
 
 **Example Request:**
 ```
-GET /api/analytics/box-office-prediction?movieId=1
+GET /api/analytics/11
 ```
 
 **Response:**
 ```json
 {
-  "movieId": 1,
-  "predictedBoxOffice": 127543892.45
+  "movieId": 11,
+  "predictedBoxOffice": {
+    "prediction_metadata": {
+      "identified_period": "January Week 3",
+      "analysis_logic": "The release date is within the final week of January, which has evolved into a secondary lucrative slot. The Positivity Ratio and Sentiment Score are adjusted downwards due to their lower values compared to historical benchmarks, leading to projected figures at the 'Lower' end of the historical ranges."
+    },
+    "financial_projections": {
+      "opening_day_collection": {
+        "estimated_range": "?6 cr ? ?8 cr",
+        "confidence_level": "70%"
+      },
+      "average_weekend_gross_cumulative": "?95 cr ? ?115 cr",
+      "mean_worldwide_gross_total": "?32.5 Cr"
+    },
+    "strategic_fit": {
+      "optimal_genre": "Social Thriller",
+      "key_success_factors": [
+        "Moderate Star Power",
+        "Festive Multiplier (Republic Day Holiday)",
+        "Content Innovation"
+      ]
+    },
+    "market_verdict": "Average"
+  }
 }
 ```
 
 **Status Code:** `200 OK`
 
 **Note:** Mock implementation returns random values between $50M-$150M
-
----
-
-### 17. Get Trending Genre
-
-**Endpoint:** `GET /api/analytics/trending-genre`
-
-**Description:** Get the trending genre for a specific date (Mock analytics)
-
-**Headers:**
-```
-Authorization: Bearer {jwt_token}
-```
-
-**Query Parameters:**
-- `date` - Date in ISO format (e.g., 2025-11-08)
-
-**Example Request:**
-```
-GET /api/analytics/trending-genre?date=2025-11-08
-```
-
-**Response:**
-```json
-{
-  "date": "2025-11-08",
-  "trendingGenre": "Sci-Fi"
-}
-```
-
-**Status Code:** `200 OK`
-
-**Note:** Mock implementation returns random genre from: Action, Comedy, Drama, Thriller, Sci-Fi, Romance
-
----
-
-### 18. Get Hit Genre Prediction
-
-**Endpoint:** `GET /api/analytics/hit-genre-prediction`
-
-**Description:** Get predicted hit genre for upcoming releases (Mock analytics)
-
-**Headers:**
-```
-Authorization: Bearer {jwt_token}
-```
-
-**Response:**
-```json
-{
-  "predictedHitGenre": "Action"
-}
-```
-
-**Status Code:** `200 OK`
-
-**Note:** Mock implementation returns random genre from: Action, Comedy, Drama, Thriller, Sci-Fi, Romance
-
----
-
-### 19. Get Best Genre
-
-**Endpoint:** `GET /api/analytics/best-genre`
-
-**Description:** Get the best performing genre for a specific date (Mock analytics)
-
-**Headers:**
-```
-Authorization: Bearer {jwt_token}
-```
-
-**Query Parameters:**
-- `date` - Date in ISO format (e.g., 2025-11-08)
-
-**Example Request:**
-```
-GET /api/analytics/best-genre?date=2025-11-08
-```
-
-**Response:**
-```json
-{
-  "date": "2025-11-08",
-  "bestGenre": "Comedy"
-}
-```
-
-**Status Code:** `200 OK`
-
-**Note:** Mock implementation returns random genre from: Action, Comedy, Drama, Thriller, Sci-Fi, Romance
-
----
-
-### 20. Get Top Box Office
-
-**Endpoint:** `GET /api/analytics/top-box-office`
-
-**Description:** Get the top box office movie for a specific date (Mock analytics)
-
-**Headers:**
-```
-Authorization: Bearer {jwt_token}
-```
-
-**Query Parameters:**
-- `date` - Date in ISO format (e.g., 2025-11-08)
-
-**Example Request:**
-```
-GET /api/analytics/top-box-office?date=2025-11-08
-```
-
-**Response:**
-```json
-{
-  "date": "2025-11-08",
-  "topBoxOfficeMovie": "Avatar 3"
-}
-```
-
-**Status Code:** `200 OK`
-
-**Note:** Mock implementation returns random movie from a predefined list
 
 ---
 
@@ -1056,8 +972,6 @@ spring.jpa.hibernate.ddl-auto=update
 mvn clean package
 java -jar target/aura-service-1.0.0.jar
 ```
-
----
 
 ## License
 

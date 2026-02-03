@@ -1,0 +1,13 @@
+package com.aura.service.dto;
+
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+public class SentimentStats {
+    private Double averageSentimentScore;
+    private Double positiveRatio;
+}

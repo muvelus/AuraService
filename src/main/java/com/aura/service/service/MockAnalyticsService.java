@@ -1,5 +1,9 @@
 package com.aura.service.service;
 
+import com.aura.service.dto.SentimentStats;
+import com.aura.service.entity.ManagedEntity;
+import com.aura.service.repository.ManagedEntityRepository;
+import com.aura.service.repository.MentionRepository;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Value;
@@ -9,6 +13,7 @@ import java.time.format.DateTimeFormatter;
 import java.time.temporal.WeekFields;
 import java.util.HashMap;
 import java.util.Locale;
+import java.util.Optional;
 
 @Service
 public class MockAnalyticsService implements AnalyticsService {
@@ -16,12 +21,16 @@ public class MockAnalyticsService implements AnalyticsService {
     private final ObjectMapper objectMapper = new ObjectMapper();
 
     private final LLMService llmService;
+    private final ManagedEntityRepository managedEntityRepository;
+    private final MentionRepository mentionRepository;
 
     @Value("${llm.prompt.generate.prediction}")
     private String llmPrompt;
 
-    public MockAnalyticsService(LLMService llmService) {
+    public MockAnalyticsService(LLMService llmService, ManagedEntityRepository managedEntityRepository, MentionRepository mentionRepository) {
         this.llmService = llmService;
+        this.managedEntityRepository = managedEntityRepository;
+        this.mentionRepository = mentionRepository;
     }
 
     private JsonNode callLlmAndParse(String prompt) {
@@ -34,7 +43,7 @@ public class MockAnalyticsService implements AnalyticsService {
         }
     }
 
-    private String buildPrompt(LocalDate date, int sentimentScore, double positivityRatio) {
+    private String buildPrompt(LocalDate date, double sentimentScore, double positivityRatio) {
         WeekFields weekFields = WeekFields.of(Locale.getDefault());
         int weekOfYear = date.get(weekFields.weekOfWeekBasedYear());
         String weekKey = "W" + weekOfYear;
@@ -138,34 +147,14 @@ public class MockAnalyticsService implements AnalyticsService {
     }
 
     @Override
-    public JsonNode getBoxOfficePrediction(Long movieId, LocalDate date, int sentimentScore, double positivityRatio) {
-        String prompt = buildPrompt(date, sentimentScore, positivityRatio);
-        return callLlmAndParse(prompt);
-    }
+    public JsonNode getAnalytics(Long movieId) {
+        ManagedEntity entity = managedEntityRepository.findById(movieId)
+                .orElseThrow(() -> new RuntimeException("Entity not found with id: " + movieId));
+        LocalDate date = entity.getReleaseDate();
+        SentimentStats stats = mentionRepository.getSentimentStats(movieId)
+                .orElse(new SentimentStats(0.0, 0.0));
 
-    private JsonNode getOptimalGenre(LocalDate date, int sentimentScore, double positivityRatio) {
-        String prompt = buildPrompt(date, sentimentScore, positivityRatio);
-        return callLlmAndParse(prompt);
-    }
-
-    @Override
-    public JsonNode getTrendingGenre(Long movieId, LocalDate date, int sentiment_score, double positivityRatio) {
-        return getOptimalGenre(date, sentiment_score, positivityRatio);
-    }
-
-    @Override
-    public JsonNode getHitGenrePrediction(Long movieId, LocalDate date, int sentiment_score, double positivityRatio) {
-        return getOptimalGenre(date, sentiment_score, positivityRatio);
-    }
-
-    @Override
-    public JsonNode getBestGenre(Long movieId, LocalDate date, int sentiment_score, double positivityRatio) {
-        return getOptimalGenre(date, sentiment_score, positivityRatio);
-    }
-
-    @Override
-    public JsonNode getTopBoxOffice(Long movieId, LocalDate date, int sentiment_score, double positivityRatio) {
-        String prompt = buildPrompt(date, sentiment_score, positivityRatio);
+        String prompt = buildPrompt(date, stats.getAverageSentimentScore(), stats.getPositiveRatio());
         return callLlmAndParse(prompt);
     }
 }
