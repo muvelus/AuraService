@@ -49,6 +49,11 @@ public class InteractionController {
                 .replace("[Positive / Negative / Neutral]", mention.getSentiment().name());
 
         String generatedReply = llmService.generateReply(prompt);
+        int firstQuote = generatedReply.indexOf('"');
+        int lastQuote = generatedReply.lastIndexOf('"');
+        if (firstQuote != -1 && lastQuote != -1 && firstQuote != lastQuote) {
+            generatedReply = generatedReply.substring(firstQuote + 1, lastQuote);
+        }
         return ResponseEntity.ok(new GenerateReplyResponse(generatedReply));
     }
 
