@@ -48,11 +48,9 @@ public interface MentionRepository extends JpaRepository<Mention, Long> {
         @Param("endDate") Instant endDate
     );
 
-    @Query(value = "SELECT " +
-        "    AVG(sentiment_score) AS average_sentiment_score, " +
-        "    CAST(COUNT(CASE WHEN sentiment = 'POSITIVE' THEN 1 END) AS FLOAT) / COUNT(sentiment) AS positive_ratio " +
-        "FROM mentions " +
-        "WHERE managed_entity_id = :entityId " +
-        "GROUP BY managed_entity_id", nativeQuery = true)
+    @Query("SELECT new com.aura.service.dto.SentimentStats(" +
+            "AVG(m.sentimentScore), " +
+            "CAST(SUM(CASE WHEN m.sentiment = com.aura.service.enums.Sentiment.POSITIVE THEN 1 ELSE 0 END) AS Double) / COUNT(m)) " +
+            "FROM Mention m WHERE m.managedEntity.id = :entityId")
     Optional<SentimentStats> getSentimentStats(@Param("entityId") Long entityId);
 }
