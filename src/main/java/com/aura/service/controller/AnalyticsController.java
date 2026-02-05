@@ -15,11 +15,19 @@ import java.util.Map;
 public class AnalyticsController {
 
     private final AnalyticsService analyticsService;
+    private final Map<Long, JsonNode> cache = new HashMap<>();
 
     @GetMapping("/{movieId}")
     public ResponseEntity<Map<String, Object>> getPrediction(@PathVariable Long movieId) {
-        analyticsService.init();
+        if (cache.containsKey(movieId)) {
+            Map<String, Object> response = new HashMap<>();
+            response.put("movieId", movieId);
+            response.put("predictedBoxOffice", cache.get(movieId));
+            return ResponseEntity.ok(response);
+        }
+
         JsonNode prediction = analyticsService.getAnalytics(movieId);
+        cache.put(movieId, prediction);
         Map<String, Object> response = new HashMap<>();
         response.put("movieId", movieId);
         response.put("predictedBoxOffice", prediction);

@@ -6,6 +6,7 @@ import com.aura.service.repository.ManagedEntityRepository;
 import com.aura.service.repository.MentionRepository;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import java.time.LocalDate;
@@ -59,7 +60,7 @@ public class MockAnalyticsService implements AnalyticsService {
                 .replace("[Insert Ratio]", String.valueOf(positivityRatio));
     }
 
-    @Override
+    @PostConstruct
     public void init() {
         mapOfData = new HashMap<>();
         mapOfData.put("W1", "The first week of January is traditionally viewed as a quiet period. Major production houses " +
