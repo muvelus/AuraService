@@ -387,37 +387,9 @@ Authorization: Bearer {jwt_token}
 
 ## Dashboard APIs
 
-### 8. Get Entity Statistics
+### 8. Get Average Entity Statistics
 
 **Endpoint:** `GET /api/dashboard/{entityType}/{entityId}/stats`
-
-**Description:** Get core statistics for an entity
-
-**Headers:**
-```
-Authorization: Bearer {jwt_token}
-```
-
-**Path Parameters:**
-- `entityType` - The type of the entity (e.g., `movie`, `celebrity`)
-- `entityId` - Entity ID (e.g., 1)
-
-**Response:**
-```json
-{
-  "totalMentions": 50,
-  "positiveSentiment": 0.64,
-  "negativeSentiment": 0.18
-}
-```
-
-**Status Code:** `200 OK`
-
----
-
-### 9. Get Average Entity Statistics
-
-**Endpoint:** `GET /api/dashboard/{entityType}/{entityId}/stats/avg`
 
 **Description:** Get average statistics for an entity including overall sentiment, positive ratio, and net sentiment score.
 
@@ -437,6 +409,35 @@ Authorization: Bearer {jwt_token}
   "overallSentiment": 0.75,
   "positiveRatio": 0.64,
   "netSentimentScore": 3.55
+}
+```
+
+**Status Code:** `200 OK`
+
+---
+
+### 9. Get Entity Statistics
+
+**Endpoint:** `GET /api/dashboard/{entityType}/{entityId}/stats/avg`
+
+**Description:** Get core statistics for an entity
+
+**Headers:**
+```
+Authorization: Bearer {jwt_token}
+```
+
+**Path Parameters:**
+- `entityType` - The type of the entity (e.g., `movie`, `celebrity`)
+- `entityId` - Entity ID (e.g., 1)
+
+**Response:**
+```json
+{
+  "totalMentions": 50,
+  "positiveSentiment": 0.64,
+  "negativeSentiment": 0.18,
+  "neutralSentiment": 0.18
 }
 ```
 
@@ -465,17 +466,23 @@ Authorization: Bearer {jwt_token}
   {
     "entityName": "The Quantum Paradox",
     "totalMentions": 50,
-    "positiveSentiment": 0.64
+    "overallSentiment": 0.75,
+    "positiveRatio": 0.64,
+    "netSentimentScore": 3.55
   },
   {
     "entityName": "Inception 2",
     "totalMentions": 50,
-    "positiveSentiment": 0.58
+    "overallSentiment": 0.72,
+    "positiveRatio": 0.58,
+    "netSentimentScore": 3.15
   },
   {
     "entityName": "Interstellar Reloaded",
     "totalMentions": 50,
-    "positiveSentiment": 0.62
+    "overallSentiment": 0.74,
+    "positiveRatio": 0.62,
+    "netSentimentScore": 3.35
   }
 ]
 ```

@@ -21,13 +21,13 @@ public class DashboardController {
     
     private final DashboardService dashboardService;
     
-    @GetMapping("/stats")
+    @GetMapping("/stats/avg")
     public ResponseEntity<EntityStatsResponse> getStats(@PathVariable String entityType, @PathVariable Long entityId) {
         EntityStatsResponse response = dashboardService.getEntityStats(entityType, entityId);
         return ResponseEntity.ok(response);
     }
     
-    @GetMapping("/stats/avg")
+    @GetMapping("/stats")
     public ResponseEntity<EntityStatsAvgResponse> getStatsAvg(@PathVariable String entityType, @PathVariable Long entityId) {
         EntityStatsAvgResponse response = dashboardService.getEntityStatsAvg(entityType, entityId);
         return ResponseEntity.ok(response);

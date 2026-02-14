@@ -10,5 +10,7 @@ import lombok.NoArgsConstructor;
 public class CompetitorSnapshot {
     private String entityName;
     private long totalMentions;
-    private double positiveSentiment;
+    private double overallSentiment;
+    private double positiveRatio;
+    private double netSentimentScore;
 }

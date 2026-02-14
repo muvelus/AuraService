@@ -74,12 +74,18 @@ public class DashboardService {
     }
     
     private CompetitorSnapshot createSnapshot(ManagedEntity entity) {
-        long totalMentions = mentionRepository.countByManagedEntityId(entity.getId());
-        long positiveMentions = mentionRepository.countByManagedEntityIdAndSentiment(entity.getId(), Sentiment.POSITIVE);
-        
-        double positiveSentiment = totalMentions > 0 ? (double) positiveMentions / totalMentions : 0.0;
-        
-        return new CompetitorSnapshot(entity.getName(), totalMentions, positiveSentiment);
+        long entityId = entity.getId();
+        long totalMentions = mentionRepository.countByManagedEntityId(entityId);
+        long positiveMentions = mentionRepository.countByManagedEntityIdAndSentiment(entityId, Sentiment.POSITIVE);
+        long negativeMentions = mentionRepository.countByManagedEntityIdAndSentiment(entityId, Sentiment.NEGATIVE);
+
+        Optional<SentimentStats> sentimentStats = mentionRepository.getSentimentStats(entity.getId());
+
+        double overallSentiment = sentimentStats.map(SentimentStats::getAverageSentimentScore).orElse(0.0);
+        double positiveRatio = totalMentions > 0 ? (double) positiveMentions / totalMentions : 0.0;
+        double netSentimentScore = negativeMentions > 0 ? (double) positiveMentions / negativeMentions : 0.0;
+
+        return new CompetitorSnapshot(entity.getName(), totalMentions, overallSentiment, positiveRatio, netSentimentScore);
     }
     
     public SentimentOverTimeResponse getSentimentOverTime(
