@@ -415,7 +415,36 @@ Authorization: Bearer {jwt_token}
 
 ---
 
-### 9. Get Competitor Snapshot
+### 9. Get Average Entity Statistics
+
+**Endpoint:** `GET /api/dashboard/{entityType}/{entityId}/stats/avg`
+
+**Description:** Get average statistics for an entity including overall sentiment, positive ratio, and net sentiment score.
+
+**Headers:**
+```
+Authorization: Bearer {jwt_token}
+```
+
+**Path Parameters:**
+- `entityType` - The type of the entity (e.g., `movie`, `celebrity`)
+- `entityId` - Entity ID (e.g., 1)
+
+**Response:**
+```json
+{
+  "totalMentions": 50,
+  "overallSentiment": 0.75,
+  "positiveRatio": 0.64,
+  "netSentimentScore": 3.55
+}
+```
+
+**Status Code:** `200 OK`
+
+---
+
+### 10. Get Competitor Snapshot
 
 **Endpoint:** `GET /api/dashboard/{entityType}/{entityId}/competitor-snapshot`
 
@@ -455,7 +484,7 @@ Authorization: Bearer {jwt_token}
 
 ---
 
-### 10. Get Sentiment Over Time
+### 11. Get Sentiment Over Time
 
 **Endpoint:** `GET /api/dashboard/{entityType}/{entityId}/sentiment-over-time`
 
@@ -537,7 +566,7 @@ GET /api/dashboard/movie/1/sentiment-over-time?period=WEEK&entityIds=1,3
 
 ---
 
-### 11. Get Platform Mentions
+### 12. Get Platform Mentions
 
 **Endpoint:** `GET /api/dashboard/{entityType}/{entityId}/platform-mentions`
 
@@ -582,7 +611,7 @@ Authorization: Bearer {jwt_token}
 
 ---
 
-### 12. Get Filtered Mentions
+### 13. Get Filtered Mentions
 
 **Endpoint:** `GET /api/dashboard/{entityType}/{entityId}/mentions`
 
@@ -648,7 +677,7 @@ GET /api/dashboard/movie/1/mentions?platform=X&page=0&size=5
 
 ## Interaction APIs
 
-### 13. Generate Reply
+### 14. Generate Reply
 
 **Endpoint:** `POST /api/interact/generate-reply`
 
@@ -679,7 +708,7 @@ Authorization: Bearer {jwt_token}
 
 ---
 
-### 14. Post Response
+### 15. Post Response
 
 **Endpoint:** `POST /api/interact/respond`
 
@@ -712,7 +741,7 @@ Authorization: Bearer {jwt_token}
 
 ## Crisis Management APIs
 
-### 15. Generate Crisis Plan
+### 16. Generate Crisis Plan
 
 **Endpoint:** `POST /api/crisis/generate-plan`
 
@@ -744,7 +773,7 @@ Authorization: Bearer {jwt_token}
 
 ## Analytics APIs
 
-### 16. Get Box Office Prediction
+### 17. Get Box Office Prediction
 
 **Endpoint:** `GET /api/analytics/{movieId}`
 

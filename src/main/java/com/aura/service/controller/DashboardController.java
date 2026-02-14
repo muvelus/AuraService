@@ -27,6 +27,12 @@ public class DashboardController {
         return ResponseEntity.ok(response);
     }
     
+    @GetMapping("/stats/avg")
+    public ResponseEntity<EntityStatsAvgResponse> getStatsAvg(@PathVariable String entityType, @PathVariable Long entityId) {
+        EntityStatsAvgResponse response = dashboardService.getEntityStatsAvg(entityType, entityId);
+        return ResponseEntity.ok(response);
+    }
+    
     @GetMapping("/competitor-snapshot")
     public ResponseEntity<List<CompetitorSnapshot>> getCompetitorSnapshot(@PathVariable String entityType, @PathVariable Long entityId) {
         List<CompetitorSnapshot> response = dashboardService.getCompetitorSnapshot(entityType, entityId);
